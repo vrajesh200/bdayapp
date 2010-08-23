@@ -1,6 +1,9 @@
 package com.bdayapp;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -26,18 +29,24 @@ public class BdayNotifier extends Activity
         int rowNum = contactCursor.getCount();
         contactCursor.moveToFirst();
         mdArrayAdapter = new ArrayAdapter<String>(this, R.layout.list_item);
+        ArrayList<contactInfo> contact_list = new ArrayList<contactInfo>();
         for (int i = 0; i < rowNum; i++)
         {
         	contactCursor.moveToPosition(i);
         	Log.w("BdayNotifier", "Name = " + contactCursor.getString(1));
-        	String Dob = GetDobOfContact(contactCursor.getString(0));
+        	String Dob = GetDobOfContact(this, contactCursor.getString(0));
         	Log.w("BDayNOtifier", "DOB = " + Dob);
         	if (!Dob.equalsIgnoreCase(""))
         	{
-        		mdArrayAdapter.add(contactCursor.getString(1) + "\n" + Dob);
+        		contactInfo cinfo = new contactInfo();
+        		cinfo.contactName = contactCursor.getString(1);
+        		cinfo.dateOfBirth = Dob;
+        		contact_list.add(cinfo);
         	}
         }
-        mContactList.setAdapter(mdArrayAdapter);
+        Log.w("BdayNotifier", "Num of items in contact_list = " + contact_list.size());
+        bdayList m_Adapter = new bdayList(this, contact_list);
+        mContactList.setAdapter(m_Adapter);
     }
     
     private Cursor getContactList()
@@ -54,10 +63,10 @@ public class BdayNotifier extends Activity
     	return managedQuery(uri, BdayList, selection, selectionArgs, sortOrder);
     }
     
-    private String GetDobOfContact(String ContactID)
+    public String GetDobOfContact(Context ctx, String ContactID)
     {
     	String Dob = "";
-        Cursor c = this.getContentResolver().query(
+        Cursor c = ctx.getContentResolver().query(
      	       Data.CONTENT_URI,
      	       new String[] { Event.DATA },
      	       Data.CONTACT_ID + "=" + ContactID + " AND "
