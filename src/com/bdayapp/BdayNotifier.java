@@ -1,6 +1,9 @@
 package com.bdayapp;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 
 import android.app.Activity;
 import android.content.Context;
@@ -14,10 +17,10 @@ import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-
 public class BdayNotifier extends Activity
 {
 	ArrayAdapter<String> mdArrayAdapter = null;
+	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,6 +47,7 @@ public class BdayNotifier extends Activity
         		contact_list.add(cinfo);
         	}
         }
+        Collections.sort(contact_list, new contactInfoComparator());
         Log.w("BdayNotifier", "Num of items in contact_list = " + contact_list.size());
         bdayList m_Adapter = new bdayList(this, contact_list);
         mContactList.setAdapter(m_Adapter);
@@ -85,4 +89,48 @@ public class BdayNotifier extends Activity
         }
         return Dob;
     }
+   
+}
+class contactInfoComparator implements Comparator<Object>
+{
+	public int compare(Object obj1, Object obj2)
+	{
+		contactInfo c1 = (contactInfo) obj1;
+		contactInfo c2 = (contactInfo) obj2;
+		int Isc1Greater = 0;
+		String[] c1Dob = null;
+		String[] c2Dob = null;
+		c1Dob = c1.dateOfBirth.split("-");
+		c2Dob = c2.dateOfBirth.split("-");
+		
+		if (Integer.parseInt(c1Dob[2]) > Integer.parseInt(c2Dob[2]))
+		{
+			Isc1Greater = 1;
+		}
+		else if (Integer.parseInt(c1Dob[2]) < Integer.parseInt(c2Dob[2]))
+		{
+			Isc1Greater = -1;
+		}
+		if (Integer.parseInt(c1Dob[1]) > Integer.parseInt(c2Dob[1]))
+		{
+			Isc1Greater = 1;
+		}
+		else if (Integer.parseInt(c1Dob[1]) < Integer.parseInt(c2Dob[1]))
+		{
+			Isc1Greater = -1;
+		}
+		if (Integer.parseInt(c1Dob[0]) > Integer.parseInt(c2Dob[0]))
+		{
+			Isc1Greater = 1;
+		}
+		else if (Integer.parseInt(c1Dob[0]) < Integer.parseInt(c2Dob[0]))
+		{
+			Isc1Greater = -1;
+		}
+		Log.w("contactInfoComparator", "c1 dob = " + c1.dateOfBirth );
+		Log.w("contactInfoComparator", "c2 dob = " + c2.dateOfBirth );
+		Log.w("contactInfoComparator", "Isc1Greater = " + Isc1Greater );
+		return Isc1Greater;
+	}
+
 }
