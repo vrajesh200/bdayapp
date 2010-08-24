@@ -47,6 +47,9 @@ public class bdayList extends BaseAdapter {
 
         tview_dob = (TextView)v.findViewById(R.id.date_of_birth);
         tview_dob.setText(DateFormat.getDateInstance().format(elements.get(position).dateOfBirth));
+        
+        TextView tview_next = (TextView)v.findViewById(R.id.next_bday);
+        tview_next.setText(String.valueOf(elements.get(position).numOfDaysToNextBday));
 
         return v;
 	}
