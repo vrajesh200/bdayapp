@@ -11,6 +11,7 @@ import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
 import android.app.Activity;
+import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -43,9 +44,9 @@ public class BdayNotifier extends Activity
         for (int i = 0; i < rowNum; i++)
         {	
         	contactCursor.moveToPosition(i);
-        	Log.w("BdayNotifier", "Name = " + contactCursor.getString(1));
+        	//Log.w("BdayNotifier", "Name = " + contactCursor.getString(1));
         	String Dob = GetDobOfContact(this, contactCursor.getString(0));
-        	Log.w("BDayNOtifier", "DOB = " + Dob);
+        	//Log.w("BDayNOtifier", "DOB = " + Dob);
         	if (!Dob.equalsIgnoreCase(""))
         	{	
         		Calendar dobCal = new GregorianCalendar(tz);
@@ -76,6 +77,7 @@ public class BdayNotifier extends Activity
         			cinfo.numOfDaysToNextBday = 365 - diff;
         		}	
         		contact_list.add(cinfo);
+        		cinfo.contactPhotoUri = getContactPhoto(this, cinfo.contactID);
         	}
         }
         Collections.sort(contact_list, new contactInfoComparator());
@@ -121,7 +123,15 @@ public class BdayNotifier extends Activity
         }
         return Dob;
     }
-   
+   private Uri getContactPhoto(Context ctx, String contactID)
+   {
+       Uri person = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, Long
+               .parseLong(contactID));
+       Uri photo = Uri.withAppendedPath(person, ContactsContract.Contacts.Photo.CONTENT_DIRECTORY);
+
+       Log.w("getContactPhoto", "photo Uri = " + photo.toString());
+       return photo;
+   }
 }
 class contactInfoComparator implements Comparator<Object>
 {
