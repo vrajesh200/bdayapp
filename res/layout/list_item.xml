@@ -3,10 +3,16 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:background="#000099FF" >
+<ImageView android:id="@+id/contact_image"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingLeft="10dp"
+    android:paddingTop = "40dp" />             
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/contact_name"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_toRightOf="@id/contact_image"
     android:padding="10dp"
     android:textSize="24sp" />
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -14,6 +20,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_below="@id/contact_name"
+    android:layout_alignLeft="@id/contact_name"
     android:padding="10dp"
     android:textSize="16sp" />
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -21,6 +28,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_below="@id/date_of_birth"
+    android:layout_alignLeft="@id/date_of_birth"
     android:padding="10dp"
     android:textSize="16sp" />
 </RelativeLayout>

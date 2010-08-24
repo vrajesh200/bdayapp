@@ -1,14 +1,19 @@
 package com.bdayapp;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.text.DateFormat;
 import java.util.ArrayList;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
-
-import java.text.DateFormat;
+import android.graphics.Bitmap;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class bdayList extends BaseAdapter {
@@ -40,6 +45,7 @@ public class bdayList extends BaseAdapter {
 		TextView tview_cname;
 		TextView tview_dob;
 		View v = convertView;
+		boolean contactPhotoFound = true;
         if (v == null) {
         	v = View.inflate(c, R.layout.list_item, null);
         }
@@ -51,6 +57,27 @@ public class bdayList extends BaseAdapter {
         TextView tview_next = (TextView)v.findViewById(R.id.next_bday);
         tview_next.setText(String.valueOf(elements.get(position).numOfDaysToNextBday) + " days to Go");
         tview_next.setTextColor(ColorStateList.valueOf(0xFFFF0000));
+        Bitmap bmap = null;
+        //Log.w("getView", "Contact name = " + (elements.get(position)).contactName.toString());
+        try {
+			bmap = MediaStore.Images.Media.getBitmap(c.getContentResolver(), elements.get(position).contactPhotoUri);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			Log.w("getView", "File not found for" + (elements.get(position)).contactName.toString());
+			contactPhotoFound = false;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ImageView iview_photo = (ImageView)v.findViewById(R.id.contact_image);
+		if (contactPhotoFound)
+		{
+			iview_photo.setImageBitmap(bmap);
+		}
+		else
+		{
+			iview_photo.setImageBitmap(null);
+		}
         return v;
 	}
 
