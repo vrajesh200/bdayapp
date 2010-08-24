@@ -3,9 +3,12 @@ package com.bdayapp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import android.app.Activity;
 import android.content.Context;
@@ -35,6 +38,8 @@ public class BdayNotifier extends Activity
         contactCursor.moveToFirst();
         mdArrayAdapter = new ArrayAdapter<String>(this, R.layout.list_item);
         ArrayList<contactInfo> contact_list = new ArrayList<contactInfo>();
+        TimeZone tz = TimeZone.getDefault();
+        Calendar presentCal = new GregorianCalendar(tz);
         for (int i = 0; i < rowNum; i++)
         {	
         	contactCursor.moveToPosition(i);
@@ -42,7 +47,8 @@ public class BdayNotifier extends Activity
         	String Dob = GetDobOfContact(this, contactCursor.getString(0));
         	Log.w("BDayNOtifier", "DOB = " + Dob);
         	if (!Dob.equalsIgnoreCase(""))
-        	{
+        	{	
+        		Calendar dobCal = new GregorianCalendar(tz);
         		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         		Date date = new Date();
 				try {
@@ -55,6 +61,20 @@ public class BdayNotifier extends Activity
         		contactInfo cinfo = new contactInfo();
         		cinfo.contactName = contactCursor.getString(1);
         		cinfo.dateOfBirth = date;
+        		cinfo.contactID = contactCursor.getString(0);
+        		dobCal.setTime(date);
+        		int pres = 0, dob = 0, diff;
+        		pres = presentCal.get(Calendar.DAY_OF_YEAR);
+        		dob = dobCal.get(Calendar.DAY_OF_YEAR);
+        		diff = pres - dob;
+        		if (diff < 0)
+        		{
+        			cinfo.numOfDaysToNextBday = Math.abs(diff);
+        		}
+        		else
+        		{
+        			cinfo.numOfDaysToNextBday = 365 - diff;
+        		}	
         		contact_list.add(cinfo);
         	}
         }
@@ -110,7 +130,7 @@ class contactInfoComparator implements Comparator<Object>
 		contactInfo c1 = (contactInfo) obj1;
 		contactInfo c2 = (contactInfo) obj2;
 		
-		return c1.dateOfBirth.compareTo(c2.dateOfBirth);
+		return (c1.numOfDaysToNextBday - c2.numOfDaysToNextBday);
 	}
 
 }
