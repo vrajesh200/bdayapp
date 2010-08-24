@@ -1,6 +1,9 @@
 package com.bdayapp;
 
+import java.util.Date;
+
 public class contactInfo {
 	String contactName;
-	String dateOfBirth;
+	Date dateOfBirth;
+	int numOfDaysToNextBday;
 }

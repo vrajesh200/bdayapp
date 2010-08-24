@@ -3,6 +3,7 @@ package com.bdayapp;
 import java.util.ArrayList;
 
 import android.content.Context;
+import java.text.DateFormat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -37,7 +38,6 @@ public class bdayList extends BaseAdapter {
 		TextView tview_cname;
 		TextView tview_dob;
 		View v = convertView;
-
         if (v == null) {
         	v = View.inflate(c, R.layout.list_item, null);
         }
@@ -46,7 +46,8 @@ public class bdayList extends BaseAdapter {
         tview_cname.setText((elements.get(position)).contactName.toString());
 
         tview_dob = (TextView)v.findViewById(R.id.date_of_birth);
-        tview_dob.setText((elements.get(position)).dateOfBirth.toString());
+        tview_dob.setText(DateFormat.getDateInstance().format(elements.get(position).dateOfBirth));
+
         return v;
 	}
 

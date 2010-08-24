@@ -1,9 +1,11 @@
 package com.bdayapp;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 
 import android.app.Activity;
 import android.content.Context;
@@ -34,21 +36,31 @@ public class BdayNotifier extends Activity
         mdArrayAdapter = new ArrayAdapter<String>(this, R.layout.list_item);
         ArrayList<contactInfo> contact_list = new ArrayList<contactInfo>();
         for (int i = 0; i < rowNum; i++)
-        {
+        {	
         	contactCursor.moveToPosition(i);
         	Log.w("BdayNotifier", "Name = " + contactCursor.getString(1));
         	String Dob = GetDobOfContact(this, contactCursor.getString(0));
         	Log.w("BDayNOtifier", "DOB = " + Dob);
         	if (!Dob.equalsIgnoreCase(""))
         	{
+        		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        		Date date = new Date();
+				try {
+					date = (Date)formatter.parse(Dob);
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				Log.w("BdayNotifier", "Date = " + date.toGMTString());
         		contactInfo cinfo = new contactInfo();
         		cinfo.contactName = contactCursor.getString(1);
-        		cinfo.dateOfBirth = Dob;
+        		cinfo.dateOfBirth = date;
         		contact_list.add(cinfo);
         	}
         }
         Collections.sort(contact_list, new contactInfoComparator());
         Log.w("BdayNotifier", "Num of items in contact_list = " + contact_list.size());
+        
         bdayList m_Adapter = new bdayList(this, contact_list);
         mContactList.setAdapter(m_Adapter);
     }
@@ -97,40 +109,8 @@ class contactInfoComparator implements Comparator<Object>
 	{
 		contactInfo c1 = (contactInfo) obj1;
 		contactInfo c2 = (contactInfo) obj2;
-		int Isc1Greater = 0;
-		String[] c1Dob = null;
-		String[] c2Dob = null;
-		c1Dob = c1.dateOfBirth.split("-");
-		c2Dob = c2.dateOfBirth.split("-");
 		
-		if (Integer.parseInt(c1Dob[2]) > Integer.parseInt(c2Dob[2]))
-		{
-			Isc1Greater = 1;
-		}
-		else if (Integer.parseInt(c1Dob[2]) < Integer.parseInt(c2Dob[2]))
-		{
-			Isc1Greater = -1;
-		}
-		if (Integer.parseInt(c1Dob[1]) > Integer.parseInt(c2Dob[1]))
-		{
-			Isc1Greater = 1;
-		}
-		else if (Integer.parseInt(c1Dob[1]) < Integer.parseInt(c2Dob[1]))
-		{
-			Isc1Greater = -1;
-		}
-		if (Integer.parseInt(c1Dob[0]) > Integer.parseInt(c2Dob[0]))
-		{
-			Isc1Greater = 1;
-		}
-		else if (Integer.parseInt(c1Dob[0]) < Integer.parseInt(c2Dob[0]))
-		{
-			Isc1Greater = -1;
-		}
-		Log.w("contactInfoComparator", "c1 dob = " + c1.dateOfBirth );
-		Log.w("contactInfoComparator", "c2 dob = " + c2.dateOfBirth );
-		Log.w("contactInfoComparator", "Isc1Greater = " + Isc1Greater );
-		return Isc1Greater;
+		return c1.dateOfBirth.compareTo(c2.dateOfBirth);
 	}
 
 }
