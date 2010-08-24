@@ -3,6 +3,8 @@ package com.bdayapp;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+
 import java.text.DateFormat;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,16 +43,14 @@ public class bdayList extends BaseAdapter {
         if (v == null) {
         	v = View.inflate(c, R.layout.list_item, null);
         }
-
         tview_cname = (TextView)v.findViewById(R.id.contact_name);
         tview_cname.setText((elements.get(position)).contactName.toString());
-
         tview_dob = (TextView)v.findViewById(R.id.date_of_birth);
         tview_dob.setText(DateFormat.getDateInstance().format(elements.get(position).dateOfBirth));
         
         TextView tview_next = (TextView)v.findViewById(R.id.next_bday);
-        tview_next.setText(String.valueOf(elements.get(position).numOfDaysToNextBday));
-
+        tview_next.setText(String.valueOf(elements.get(position).numOfDaysToNextBday) + " days to Go");
+        tview_next.setTextColor(ColorStateList.valueOf(0xFFFF0000));
         return v;
 	}
 
