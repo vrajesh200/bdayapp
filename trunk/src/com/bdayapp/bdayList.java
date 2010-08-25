@@ -2,11 +2,13 @@ package com.bdayapp;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.security.KeyStore.LoadStoreParameter;
 import java.text.DateFormat;
 import java.util.ArrayList;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -73,10 +75,11 @@ public class bdayList extends BaseAdapter {
 		if (contactPhotoFound)
 		{
 			iview_photo.setImageBitmap(bmap);
+			Log.w("getView", "Image dimension = " + bmap.getHeight() + "x" + bmap.getWidth());
 		}
 		else
 		{
-			iview_photo.setImageBitmap(null);
+			iview_photo.setImageDrawable(c.getResources().getDrawable(R.drawable.stock_contact_photo));
 		}
         return v;
 	}
