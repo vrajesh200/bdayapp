@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -41,5 +44,20 @@ public class BdayNotifier extends Activity {
 		});
 
 	}
-
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		  MenuInflater inflater = getMenuInflater();
+		  inflater.inflate(R.menu.main_menu, menu);
+		  return true;
+		}
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle item selection
+	   if (item.getItemId() == R.id.preferences)
+	   {
+		   Intent prefIntent = new Intent(BdayNotifier.this, Configuration.class);
+		   startActivity(prefIntent);
+	   }
+	   return true;
+	}
 }
