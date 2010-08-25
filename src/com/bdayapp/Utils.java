@@ -75,16 +75,16 @@ public class Utils {
 
 	private static int daysInMonth(Calendar cal) {
 		int month = cal.get(Calendar.MONTH);
-		if (month != 2) {
+		if (month != Calendar.FEBRUARY) {
 			return DAYS_OF_MONTH[month];
 		}
 
 		int year = cal.get(Calendar.YEAR);
 
 		if ((year % 4) == 0) {
-			return DAYS_OF_MONTH_LEAP[2];
+			return DAYS_OF_MONTH_LEAP[Calendar.FEBRUARY];
 		} else {
-			return DAYS_OF_MONTH[2];
+			return DAYS_OF_MONTH[Calendar.FEBRUARY];
 		}
 	}
 
@@ -101,6 +101,8 @@ public class Utils {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(numberOfDaysToBday(parse("2010-08-25")));
+		Date dob = parse("2011-08-15");
+		Date from = parse("2011-08-25");
+		System.out.println(numberOfDaysToBday(dob, from));
 	}
 }
