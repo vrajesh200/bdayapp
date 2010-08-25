@@ -1,11 +1,6 @@
 package com.bdayapp;
 
 import android.app.Activity;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -25,17 +20,10 @@ public class ContactPage extends Activity {
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.contact_page);
 
-			TextView tview_cname;
-			TextView tview_dob;
 			ContactInfo cinfo = BdayNotifier.contactList.get(BdayNotifier.clickPosition);
-	        tview_cname = (TextView)findViewById(R.id.contact_name_1);
-
-	        if (tview_cname != null)
-	        {
-	        	tview_cname.setText(cinfo.getContactName());
-	        }
-
-	        tview_dob = (TextView)findViewById(R.id.date_of_birth_1);
+			TextView tview_cname = (TextView)findViewById(R.id.contact_name_1);
+	        tview_cname.setText(cinfo.getContactName());
+	        TextView tview_dob = (TextView)findViewById(R.id.date_of_birth_1);
 	        tview_dob.setText(Utils.format(cinfo.getDateOfBirth()));
 
 	        TextView tview_next = (TextView)findViewById(R.id.next_bday_1);
@@ -57,7 +45,10 @@ public class ContactPage extends Activity {
 			{
 				iview_photo.setImageDrawable(this.getResources().getDrawable(R.drawable.stock_contact_photo));
 			}
-
+			
+			TextView tviewPhNum = (TextView)findViewById(R.id.contac_number);
+			tviewPhNum.setText(cinfo.getContactPhoneNumber());
+			
 			View v = View.inflate(this, R.layout.contact_page, null);
 			v.setOnKeyListener(new OnKeyListener() {
 
@@ -70,7 +61,7 @@ public class ContactPage extends Activity {
 
 
 			// sample notification
-
+			/*
 			Intent configIntent = new Intent(this, Configuration.class);
 
 			Notification note = new Notification(R.drawable.icon, cinfo.getContactName(), System.currentTimeMillis());
@@ -79,5 +70,6 @@ public class ContactPage extends Activity {
 
 			NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 			manager.notify(0, note);
+			*/
 		}
 }
