@@ -6,13 +6,14 @@
 <ImageView android:id="@+id/contact_image"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:paddingLeft="10dp"
-    android:paddingTop = "40dp" />             
+    android:layout_alignParentRight="true"
+    android:paddingRight="10dp"
+    android:paddingTop = "50dp" />             
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/contact_name"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_toRightOf="@id/contact_image"
+    android:layout_alignParentLeft="true"
     android:padding="10dp"
     android:textSize="24sp" />
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
