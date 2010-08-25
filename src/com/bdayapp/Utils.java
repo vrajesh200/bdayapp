@@ -20,10 +20,8 @@ public class Utils {
 		};
 	};
 
-	private static final int[] DAYS_OF_MONTH = { 31, 28, 31, 30, 31, 30, 31,
-			31, 30, 31, 30, 31 };
-	private static final int[] DAYS_OF_MONTH_LEAP = { 31, 29, 31, 30, 31, 30,
-			31, 31, 30, 31, 30, 31 };
+	private static final int[] DAYS_OF_MONTH = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+	private static final int[] DAYS_OF_MONTH_LEAP = { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
 	public static int numberOfDaysToBday(Date dob) {
 		return numberOfDaysToBday(dob, new Date());
@@ -47,8 +45,7 @@ public class Utils {
 
 		if (compare == -1 && sameMonth(dobCal, fromCal)) // In this month only
 		{
-			return dobCal.get(Calendar.DAY_OF_MONTH)
-					- fromCal.get(Calendar.DAY_OF_MONTH);
+			return dobCal.get(Calendar.DAY_OF_MONTH) - fromCal.get(Calendar.DAY_OF_MONTH);
 		}
 
 		int days = 0;
@@ -102,7 +99,6 @@ public class Utils {
 	public static String format(Date date) {
 		return formatter.get().format(date);
 	}
-
 
 	public static void main(String[] args) {
 		System.out.println(numberOfDaysToBday(parse("2010-08-25")));

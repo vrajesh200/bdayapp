@@ -6,7 +6,7 @@ import android.net.Uri;
 
 import com.bdayapp.Utils;
 
-public class ContactInfo implements Comparable<ContactInfo>{
+public class ContactInfo implements Comparable<ContactInfo> {
 	private String contactId;
 	private String contactName;
 	private Date dateOfBirth;
@@ -51,8 +51,7 @@ public class ContactInfo implements Comparable<ContactInfo>{
 		return contactPhotoUri;
 	}
 
-	public int compareTo(ContactInfo another)
-	{
+	public int compareTo(ContactInfo another) {
 		return numOfDaysToNextBday - another.numOfDaysToNextBday;
 	}
 

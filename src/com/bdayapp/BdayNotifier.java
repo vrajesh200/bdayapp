@@ -4,29 +4,25 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.bdayapp.contacts.ContactInfo;
 import com.bdayapp.contacts.ContactListUtil;
 
-public class BdayNotifier extends Activity
-{
-	ArrayAdapter<String> mdArrayAdapter = null;
+public class BdayNotifier extends Activity {
 
-    /** Called when the activity is first created. */
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
-        ListView mContactList;
-        mContactList = (ListView)findViewById(R.id.contact_list);
-        ArrayList<ContactInfo> contactList = ContactListUtil.getContactList(this);
+	/** Called when the activity is first created. */
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.main);
+		ListView mContactList;
+		mContactList = (ListView) findViewById(R.id.contact_list);
+		ArrayList<ContactInfo> contactList = ContactListUtil.getContactList(this);
 
-        BDayListAdapter m_Adapter = new BDayListAdapter(this, contactList);
-        mContactList.setAdapter(m_Adapter);
+		BdayListAdapter m_Adapter = new BdayListAdapter(this, contactList);
+		mContactList.setAdapter(m_Adapter);
 
-    }
-
+	}
 
 }
