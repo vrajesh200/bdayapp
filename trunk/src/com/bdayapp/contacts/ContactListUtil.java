@@ -10,8 +10,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
-import android.provider.ContactsContract.CommonDataKinds.Event;
 import android.provider.ContactsContract.Data;
+import android.provider.ContactsContract.CommonDataKinds.Event;
+import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.util.Log;
 
 import com.bdayapp.Utils;
@@ -36,7 +37,7 @@ public class ContactListUtil {
 		for (int i = 0; i < rowNum; i++) {
 			contactCursor.moveToPosition(i);
 			// Log.w("BdayNotifier", "Name = " + contactCursor.getString(1));
-			Date dob = ContactListUtil.getDobOfContact(activity, contactCursor.getString(0));
+			Date dob = ContactListUtil.getContactDob(activity, contactCursor.getString(0));
 			// Log.w("BDayNOtifier", "DOB = " + Dob);
 			if (dob != null) {
 				Log.w("BdayNotifier", "Date = " + dob.toGMTString());
@@ -45,6 +46,10 @@ public class ContactListUtil {
 				cinfo.setDateOfBirth(dob);
 				cinfo.setContactId(contactCursor.getString(0));
 				cinfo.setContactPhotoUri(ContactListUtil.getContactPhoto(activity, cinfo.getContactId()));
+				
+				String phoneNum = getContactPhoneNum(activity, contactCursor.getString(0));
+				Log.w("ContactListUtil", cinfo.getContactName() + " = " + phoneNum);
+				cinfo.setContactPhoneNumber(phoneNum);
 				contact_list.add(cinfo);
 			}
 		}
@@ -54,7 +59,7 @@ public class ContactListUtil {
 		return contact_list;
 	}
 
-	public static Date getDobOfContact(Context ctx, String ContactID) {
+	public static Date getContactDob(Context ctx, String ContactID) {
 		String dateOfBirth = "";
 		Cursor c = ctx.getContentResolver().query(
 				Data.CONTENT_URI,
@@ -78,5 +83,20 @@ public class ContactListUtil {
 		Log.w("getContactPhoto", "photo Uri = " + photo.toString());
 		return photo;
 	}
-
+	public static String getContactPhoneNum(Context ctx, String ContactID) {
+		String PhoneNum = "";
+		Cursor c = ctx.getContentResolver().query(
+				Data.CONTENT_URI,
+				new String[] { Phone.NUMBER },
+				Data.CONTACT_ID + "=" + ContactID + " AND " + Data.MIMETYPE + "= '" + Phone.CONTENT_ITEM_TYPE
+						+ "' AND " + Phone.TYPE + "=" + Phone.TYPE, null, Data.DISPLAY_NAME);
+		if (c != null) {
+			c.moveToFirst();
+			if (c.getCount() != 0) {
+				PhoneNum = c.getString(0);
+			}
+			c.close();
+		}
+		return PhoneNum;
+	}
 }
