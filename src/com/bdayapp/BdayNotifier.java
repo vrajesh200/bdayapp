@@ -55,7 +55,7 @@ public class BdayNotifier extends Activity {
 	    // Handle item selection
 	   if (item.getItemId() == R.id.preferences)
 	   {
-		   Intent prefIntent = new Intent(BdayNotifier.this, Configuration.class);
+		   Intent prefIntent = new Intent(BdayNotifier.this, SettingsPage.class);
 		   startActivity(prefIntent);
 	   }
 	   return true;

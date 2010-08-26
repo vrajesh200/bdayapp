@@ -40,4 +40,18 @@
     android:layout_alignParentLeft="true"
     android:padding="10dp"
     android:textSize="16sp" />
+<Button
+	android:id="@+id/call_button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentLeft="true"
+    android:layout_below="@id/contac_number"
+    android:text="Call" />
+<Button
+	android:id="@+id/message_button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_toRightOf="@id/call_button"
+    android:layout_below="@id/contac_number"
+    android:text="SMS" />    
 </RelativeLayout>
