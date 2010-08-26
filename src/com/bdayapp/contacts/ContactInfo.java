@@ -1,3 +1,10 @@
+//=====================================================================================================================
+// $HeadURL$
+// Checked in by: $Author$
+// $Date$
+// $Revision$
+//=====================================================================================================================
+
 package com.bdayapp.contacts;
 
 import java.io.ByteArrayInputStream;
@@ -47,7 +54,7 @@ public class ContactInfo implements Comparable<ContactInfo>, Serializable {
 	public void setContactPhoneNumber(String phoneNumber){
 		this.phoneNumber = phoneNumber;
 	}
-	
+
 	public Date getDateOfBirth() {
 		return dateOfBirth;
 	}

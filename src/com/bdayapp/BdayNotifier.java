@@ -1,3 +1,10 @@
+//=====================================================================================================================
+// $HeadURL$
+// Checked in by: $Author$
+// $Date$
+// $Revision$
+//=====================================================================================================================
+
 package com.bdayapp;
 
 import java.util.ArrayList;
@@ -44,7 +51,7 @@ public class BdayNotifier extends Activity {
 			am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sender);
 		}
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		  MenuInflater inflater = getMenuInflater();
@@ -61,15 +68,15 @@ public class BdayNotifier extends Activity {
 	   }
 	   return true;
 	}
-	
-	
+
+
 	private class LoadTask extends AsyncTask<Activity, Void, ArrayList<ContactInfo>>{
-		
+
 		@Override
 		protected ArrayList<ContactInfo> doInBackground(Activity... params) {
 			// perform long running operation operation
 			ArrayList<ContactInfo> mcontactList = ContactListUtil.getContactList(params[0]);
-			
+
 			return mcontactList;
 		}
 
@@ -94,7 +101,7 @@ public class BdayNotifier extends Activity {
 					startActivity(i);
 				    }
 				});
-			
+
 
 		}
 
@@ -115,5 +122,5 @@ public class BdayNotifier extends Activity {
 	      // Things to be done while execution of long running operation is in progress. For example updating ProgessDialog
 		 }
 	}
-	
+
 }
