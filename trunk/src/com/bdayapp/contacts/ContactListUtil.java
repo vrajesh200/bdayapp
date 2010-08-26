@@ -1,3 +1,10 @@
+//=====================================================================================================================
+// $HeadURL$
+// Checked in by: $Author$
+// $Date$
+// $Revision$
+//=====================================================================================================================
+
 package com.bdayapp.contacts;
 
 import java.util.ArrayList;
@@ -46,7 +53,7 @@ public class ContactListUtil {
 				cinfo.setDateOfBirth(dob);
 				cinfo.setContactId(contactCursor.getString(0));
 				cinfo.setContactPhotoUri(ContactListUtil.getContactPhoto(activity, cinfo.getContactId()));
-				
+
 				String phoneNum = getContactPhoneNum(activity, contactCursor.getString(0));
 				Log.w("ContactListUtil", cinfo.getContactName() + " = " + phoneNum);
 				cinfo.setContactPhoneNumber(phoneNum);
@@ -92,7 +99,7 @@ public class ContactListUtil {
 						+ "' AND " + Phone.TYPE + "=" + Phone.TYPE, null, Data.DISPLAY_NAME);
 		if (c != null) {
 			c.moveToFirst();
-			
+
 			Log.w("getContactPhoneNum", "Num of Columns = " + c.getColumnCount());
 			for (int i = 0; i < c.getColumnCount(); i++)
 			{
