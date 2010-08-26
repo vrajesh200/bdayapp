@@ -51,10 +51,10 @@ public class ContactPage extends Activity {
 			{
 				iview_photo.setImageDrawable(this.getResources().getDrawable(R.drawable.stock_contact_photo));
 			}
-			
+
 			TextView tviewPhNum = (TextView)findViewById(R.id.contac_number);
 			tviewPhNum.setText(cinfo.getContactPhoneNumber());
-			
+
 			View v = View.inflate(this, R.layout.contact_page, null);
 			v.setOnKeyListener(new OnKeyListener() {
 
@@ -64,11 +64,10 @@ public class ContactPage extends Activity {
 					return true;
 				}
 			});
-			
+
 			Button callButton = (Button)findViewById(R.id.call_button);
 			callButton.setOnClickListener(new OnClickListener() {
-				
-				@Override
+
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 					Intent intent = new Intent(Intent.ACTION_CALL);
@@ -79,8 +78,7 @@ public class ContactPage extends Activity {
 
 			Button textButton = (Button)findViewById(R.id.message_button);
 			textButton.setOnClickListener(new OnClickListener() {
-				
-				@Override
+
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 					SmsManager smsManger = SmsManager.getDefault();
