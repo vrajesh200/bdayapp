@@ -92,6 +92,13 @@ public class ContactListUtil {
 						+ "' AND " + Phone.TYPE + "=" + Phone.TYPE, null, Data.DISPLAY_NAME);
 		if (c != null) {
 			c.moveToFirst();
+			
+			Log.w("getContactPhoneNum", "Num of Columns = " + c.getColumnCount());
+			for (int i = 0; i < c.getColumnCount(); i++)
+			{
+				Log.w("getContactPhoneNum", "Column[" +i +"] = " + c.getColumnName(i));
+			}
+			Log.w("getContactPhoneNum", "Num of phone numbers  = " + c.getCount());
 			if (c.getCount() != 0) {
 				PhoneNum = c.getString(0);
 			}
