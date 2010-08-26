@@ -1,26 +1,32 @@
 package com.bdayapp;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.telephony.SmsManager;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bdayapp.contacts.ContactInfo;
 
 public class ContactPage extends Activity {
+		public ContactInfo cinfo = null;
 		@Override
 		protected void onCreate(Bundle savedInstanceState) {
 			// TODO Auto-generated method stub
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.contact_page);
 
-			ContactInfo cinfo = BdayNotifier.contactList.get(BdayNotifier.clickPosition);
+			cinfo = BdayNotifier.contactList.get(BdayNotifier.clickPosition);
 			TextView tview_cname = (TextView)findViewById(R.id.contact_name_1);
 	        tview_cname.setText(cinfo.getContactName());
 	        TextView tview_dob = (TextView)findViewById(R.id.date_of_birth_1);
@@ -58,8 +64,29 @@ public class ContactPage extends Activity {
 					return true;
 				}
 			});
+			
+			Button callButton = (Button)findViewById(R.id.call_button);
+			callButton.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					Intent intent = new Intent(Intent.ACTION_CALL);
+					intent.setData(Uri.parse("tel:" + cinfo.getContactPhoneNumber()));
+					startActivity(intent);
+				}
+			});
 
-
+			Button textButton = (Button)findViewById(R.id.message_button);
+			textButton.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					SmsManager smsManger = SmsManager.getDefault();
+					smsManger.sendTextMessage(cinfo.getContactPhoneNumber(), null, "Test message ignore", null, null);
+				}
+			});
 			// sample notification
 			/*
 			Intent configIntent = new Intent(this, Configuration.class);

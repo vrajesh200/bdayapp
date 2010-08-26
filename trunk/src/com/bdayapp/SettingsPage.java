@@ -11,14 +11,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-public class Configuration extends Activity implements OnClickListener {
+public class SettingsPage extends Activity implements OnClickListener {
 
 	private NotificationManager mManager;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.configuration);
+		setContentView(R.layout.settings);
 
 		Button button = (Button) findViewById(R.id.contact_list);
 
