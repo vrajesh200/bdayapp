@@ -32,8 +32,9 @@ public class ContactPage extends Activity {
 			// TODO Auto-generated method stub
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.contact_page);
-
-			cinfo = BdayNotifier.contactList.get(BdayNotifier.clickPosition);
+			Bundle bundle = this.getIntent().getExtras();
+			int position = bundle.getInt("IndexInList");
+			cinfo = BdayNotifier.contactList.get(position);
 			TextView tview_cname = (TextView)findViewById(R.id.contact_name_1);
 	        tview_cname.setText(cinfo.getContactName());
 	        TextView tview_dob = (TextView)findViewById(R.id.date_of_birth_1);
@@ -92,16 +93,5 @@ public class ContactPage extends Activity {
 					smsManger.sendTextMessage(cinfo.getContactPhoneNumber(), null, "Test message ignore", null, null);
 				}
 			});
-			// sample notification
-			/*
-			Intent configIntent = new Intent(this, Configuration.class);
-
-			Notification note = new Notification(R.drawable.icon, cinfo.getContactName(), System.currentTimeMillis());
-			note.setLatestEventInfo(this, "Bday Notification", cinfo.getContactName() +"'s Bday",
-					PendingIntent.getActivity(this.getBaseContext(), 0, configIntent, PendingIntent.FLAG_CANCEL_CURRENT));
-
-			NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-			manager.notify(0, note);
-			*/
 		}
 }
