@@ -18,7 +18,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 		// TODO Auto-generated method stub
 		Intent alarmIntent = new Intent(context, BdayNotifier.class);
 		alarmIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		alarmIntent.putExtra("IsAlarmSource", true);
+		alarmIntent.putExtra("IsAlarmWakeUp", true);
 		context.startActivity(alarmIntent);
 	}
 

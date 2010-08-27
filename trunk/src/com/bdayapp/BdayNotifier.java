@@ -12,10 +12,14 @@ import java.util.Calendar;
 
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -30,26 +34,32 @@ import com.bdayapp.contacts.ContactListUtil;
 public class BdayNotifier extends Activity {
 
 	public static ArrayList<ContactInfo> contactList;
-	public static int clickPosition = 0;
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		boolean disableAlarm = true;
-		new LoadTask().execute(this);
-
-		if (disableAlarm != true)
+		Bundle bundle = this.getIntent().getExtras();
+		boolean alarmWakeup = false;
+		if (bundle != null)
 		{
-			// get a Calendar object with current time
-			Calendar cal = Calendar.getInstance();
-			// add 5 minutes to the calendar object
-			cal.add(Calendar.MINUTE, 5);
-			Intent intent = new Intent(this, AlarmReceiver.class);			// In reality, you would want to have a static variable for the request code instead of 192837
-			PendingIntent sender = PendingIntent.getBroadcast(this, 192837, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-			// Get the AlarmManager service
-			AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-			am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sender);
+			alarmWakeup = bundle.getBoolean("IsAlarmWakeUp");
 		}
+		if (!alarmWakeup)
+		{
+			new LoadTask().execute(this);
+		}
+		else
+		{
+			contactList = getContactList(this);
+			if (contactList.get(0).getNumOfDaysToNextBday() == 0)
+			{
+				setNotification(0);
+			}
+			setAlarm();
+			finish();
+		}
+
 	}
 
 	@Override
@@ -75,7 +85,7 @@ public class BdayNotifier extends Activity {
 		@Override
 		protected ArrayList<ContactInfo> doInBackground(Activity... params) {
 			// perform long running operation operation
-			ArrayList<ContactInfo> mcontactList = ContactListUtil.getContactList(params[0]);
+			ArrayList<ContactInfo> mcontactList = getContactList(params[0]);
 
 			return mcontactList;
 		}
@@ -90,18 +100,22 @@ public class BdayNotifier extends Activity {
 			ListView mContactList;
 			mContactList = (ListView) findViewById(R.id.contact_list);
 			BdayListAdapter m_Adapter = new BdayListAdapter(BdayNotifier.this, result);
-			mContactList.setAdapter(m_Adapter);
 			BdayNotifier.contactList = result;
+			mContactList.setAdapter(m_Adapter);
 			mContactList.setOnItemClickListener(new OnItemClickListener() {
 				public void onItemClick(AdapterView<?> parent, View view,
 				        int position, long id) {
-				      // When clicked, show a toast with the TextView text
-					BdayNotifier.clickPosition = position;
 					Intent i = new Intent(BdayNotifier.this, ContactPage.class);
+					i.putExtra("IndexInList", position);
 					startActivity(i);
 				    }
 				});
-
+			if (contactList.get(0).getNumOfDaysToNextBday() == 0)
+			{
+				setNotification(0);
+			}
+			setAlarm();
+			Log.w("LoadTask", "Post Execute done");
 
 		}
 
@@ -122,5 +136,33 @@ public class BdayNotifier extends Activity {
 	      // Things to be done while execution of long running operation is in progress. For example updating ProgessDialog
 		 }
 	}
-
+	
+	private void setAlarm() {
+		// get a Calendar object with current time
+		Calendar cal = Calendar.getInstance();
+		// add 5 minutes to the calendar object
+		cal.add(Calendar.MINUTE, 2);
+		Intent intent = new Intent(this, AlarmReceiver.class);			// In reality, you would want to have a static variable for the request code instead of 192837
+		PendingIntent sender = PendingIntent.getBroadcast(this, 192837, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		// Get the AlarmManager service
+		AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+		am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sender);
+	}
+	
+	private void setNotification(int position) {
+		Intent configIntent = new Intent(BdayNotifier.this, ContactPage.class);
+		configIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		configIntent.putExtra("IndexInList", 0);
+		Notification note = new Notification(R.drawable.icon, contactList.get(position).getContactName(), System.currentTimeMillis());
+		note.flags = Notification.FLAG_AUTO_CANCEL;
+		note.setLatestEventInfo(BdayNotifier.this, "Bday Notification", contactList.get(position).getContactName() +"'s Bday",
+				PendingIntent.getActivity(BdayNotifier.this.getBaseContext(), 0, configIntent, PendingIntent.FLAG_CANCEL_CURRENT));
+			
+		NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		manager.notify(0, note);
+	}
+	
+	private ArrayList<ContactInfo> getContactList(Activity activity) {
+		return ContactListUtil.getContactList(activity);
+	}
 }
