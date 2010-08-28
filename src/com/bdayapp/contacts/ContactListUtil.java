@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 
-import android.app.Activity;
 import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
@@ -42,17 +41,17 @@ import com.bdayapp.Utils;
 
 public class ContactListUtil {
 
-	private static Cursor getContactCursor(Activity activity) {
+	private static Cursor getContactCursor(Context ctx) {
 		Uri uri = ContactsContract.Contacts.CONTENT_URI;
 		String[] BdayList = new String[] { ContactsContract.Contacts._ID, ContactsContract.Contacts.DISPLAY_NAME, };
 		String selection = ContactsContract.Contacts.IN_VISIBLE_GROUP + " = '" + "1" + "'";
 		String sortOrder = ContactsContract.Contacts.DISPLAY_NAME;
 		String[] selectionArgs = null;
-		return activity.managedQuery(uri, BdayList, selection, selectionArgs, sortOrder);
+		return ctx.getContentResolver().query(uri, BdayList, selection, selectionArgs, sortOrder);
 	}
 
-	public static ArrayList<ContactInfo> getContactList(Activity activity) {
-		Cursor contactCursor = getContactCursor(activity);
+	public static ArrayList<ContactInfo> getContactList(Context ctx) {
+		Cursor contactCursor = getContactCursor(ctx);
 		int rowNum = contactCursor.getCount();
 		contactCursor.moveToFirst();
 
@@ -60,7 +59,7 @@ public class ContactListUtil {
 		for (int i = 0; i < rowNum; i++) {
 			contactCursor.moveToPosition(i);
 			// Log.w("BdayNotifier", "Name = " + contactCursor.getString(1));
-			Date dob = ContactListUtil.getContactDob(activity, contactCursor.getString(0));
+			Date dob = ContactListUtil.getContactDob(ctx, contactCursor.getString(0));
 			// Log.w("BDayNOtifier", "DOB = " + Dob);
 			if (dob != null) {
 				Log.w("BdayNotifier", "Date = " + dob.toGMTString());
@@ -68,9 +67,9 @@ public class ContactListUtil {
 				cinfo.setContactName(contactCursor.getString(1));
 				cinfo.setDateOfBirth(dob);
 				cinfo.setContactId(contactCursor.getString(0));
-				cinfo.setContactPhotoUri(ContactListUtil.getContactPhoto(activity, cinfo.getContactId()));
+				cinfo.setContactPhotoUri(ContactListUtil.getContactPhoto(ctx, cinfo.getContactId()));
 
-				String phoneNum = getContactPhoneNum(activity, contactCursor.getString(0));
+				String phoneNum = getContactPhoneNum(ctx, contactCursor.getString(0));
 				Log.w("ContactListUtil", cinfo.getContactName() + " = " + phoneNum);
 				cinfo.setContactPhoneNumber(phoneNum);
 				contact_list.add(cinfo);
