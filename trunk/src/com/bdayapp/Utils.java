@@ -29,6 +29,14 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
+
 public class Utils {
 
 	private static final ThreadLocal<DateFormat> parser = new ThreadLocal<DateFormat>() {
@@ -127,5 +135,39 @@ public class Utils {
 		Date dob = parse("2011-08-15");
 		Date from = parse("2011-08-25");
 		System.out.println(numberOfDaysToBday(dob, from));
+	}
+	
+	public static void setAlarm(Context ctx) {
+		// get a Calendar object with current time
+		Calendar cal = Calendar.getInstance();
+		// add 5 minutes to the calendar object
+		//cal.add(Calendar.MINUTE, 2);
+		cal.add(Calendar.DAY_OF_YEAR, 1);
+		Date dt = cal.getTime();
+		Log.w("setAlarm", "Time = " + dt.getHours() + dt.getMinutes());
+		dt.setHours(1);
+		dt.setMinutes(0);
+		dt.setSeconds(0);
+		cal.setTime(dt);
+		Log.w("setAlarm", "Time = " + dt.getHours() + dt.getMinutes());
+		Intent intent = new Intent(ctx, AlarmReceiver.class);
+		// In reality, you would want to have a static variable for the request code instead of 192837
+		PendingIntent sender = PendingIntent.getBroadcast(ctx, 192837, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		// Get the AlarmManager service
+		AlarmManager am = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
+		am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sender);
+	}
+	
+	public static void setNotification(Context ctx, int position, String contactName, int flags) {
+		Intent configIntent = new Intent(ctx, ContactPage.class);
+		configIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		configIntent.putExtra("IndexInList", position);
+		Notification note = new Notification(R.drawable.icon, contactName, System.currentTimeMillis());
+		note.flags = flags;
+		note.setLatestEventInfo(ctx, "Bday Notification", contactName +"'s Bday",
+				PendingIntent.getActivity(ctx, 0, configIntent, PendingIntent.FLAG_CANCEL_CURRENT));
+			
+		NotificationManager manager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+		manager.notify(0, note);
 	}
 }
