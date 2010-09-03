@@ -17,23 +17,13 @@
  */
  -->
  
-<resources>
-    <string name="hello">Hello World, BdayNotifier!</string>
-    <string name="app_name">Birthday Notifier</string>
-    <string-array name="settings_array">
-        <item>Set Notification time</item>
-        <item>Select Notification type</item>
-        <item>Select LED color for trackball</item>
-    </string-array>
-    <string-array name="led_color_array">
-        <item>Red</item>
-        <item>Green</item>
-        <item>Blue</item>
-        <item>White</item>
-    </string-array>
-	<string-array name="notify_type_array">
-		<item>Sound</item>
-		<item>Vibrate</item>
-		<item>Sound + Vibrate</item>
-	</string-array>
-</resources>
+
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/notification_item"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:paddingRight="10dp"
+    android:paddingTop = "50dp"
+    android:textSize="22dp" >             
+</TextView>
