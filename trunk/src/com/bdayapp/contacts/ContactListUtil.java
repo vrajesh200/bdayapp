@@ -24,6 +24,7 @@
 package com.bdayapp.contacts;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 
@@ -105,6 +106,7 @@ public class ContactListUtil {
 		Log.w("getContactPhoto", "photo Uri = " + photo.toString());
 		return photo;
 	}
+
 	public static String getContactPhoneNum(Context ctx, String ContactID) {
 		String PhoneNum = "";
 		Cursor c = ctx.getContentResolver().query(
@@ -127,5 +129,31 @@ public class ContactListUtil {
 			c.close();
 		}
 		return PhoneNum;
+	}
+
+	public static String getNextBdayText(ContactInfo info)
+	{
+		Calendar cal = Calendar.getInstance();
+		int curYear = cal.get(Calendar.YEAR);
+
+		cal.setTime((Date)info.getDateOfBirth().clone());
+
+		int numOfDays = info.getNumOfDaysToNextBday();
+
+		cal.add(Calendar.DAY_OF_MONTH, -numOfDays);
+
+		int diff = curYear - cal.get(Calendar.YEAR);
+
+		if (numOfDays == 0)
+		{
+			return "Turned " + diff + " Today";
+		}
+
+		if (numOfDays == 1)
+		{
+			return "Turns " + diff + " Tomorrow";
+		}
+
+		return "Turns " + diff + " in " + numOfDays + " days";
 	}
 }

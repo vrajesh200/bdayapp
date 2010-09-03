@@ -15,10 +15,10 @@
  */
 
 //=====================================================================================================================
-// $HeadURL: https://bdayapp.googlecode.com/svn/trunk/src/com/bdayapp/AlarmReceiver.java $
-// Checked in by: $Author: psrinivas $
-// $Date: 2010-08-29 02:26:41 +0530 (Sun, 29 Aug 2010) $
-// $Revision: 37 $
+// $HeadURL$
+// Checked in by: $Author$
+// $Date$
+// $Revision$
 //=====================================================================================================================
 
 package com.bdayapp;

@@ -39,6 +39,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bdayapp.contacts.ContactInfo;
+import com.bdayapp.contacts.ContactListUtil;
 
 public class BdayListAdapter extends BaseAdapter {
 
@@ -79,8 +80,9 @@ public class BdayListAdapter extends BaseAdapter {
         tview_dob.setText(Utils.format(elements.get(position).getDateOfBirth()));
 
         TextView tview_next = (TextView)v.findViewById(R.id.next_bday);
-        tview_next.setText(String.valueOf(elements.get(position).getNumOfDaysToNextBday()) + " days to Go");
+        tview_next.setText(ContactListUtil.getNextBdayText(elements.get(position)));
         tview_next.setTextColor(ColorStateList.valueOf(0xFFFF0000));
+
         Bitmap bmap = null;
         //Log.w("getView", "Contact name = " + (elements.get(position)).contactName.toString());
         try {
