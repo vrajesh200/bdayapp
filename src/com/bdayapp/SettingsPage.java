@@ -23,43 +23,111 @@
 
 package com.bdayapp;
 
-import android.app.Activity;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
+import java.util.Calendar;
+
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ListActivity;
+import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TimePicker;
 
-public class SettingsPage extends Activity implements OnClickListener {
 
-	private NotificationManager mManager;
 
+public class SettingsPage extends ListActivity{
+	private int hour;
+	private int minutes;
+	static final int TIME_DIALOG_ID = 0;
+	static final int LED_DIALOG_ID = 1;
+	static final int NOTIFY_TYPE_DIALOG_ID = 2;
+	String notificationType;	
+	String ledColor;
+	AlertDialog alert_led_color;
+	AlertDialog alert_notify_type;
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		String[] settings = getResources().getStringArray(R.array.settings_array);
+		ListView lv = getListView();
+		lv.setAdapter(new ArrayAdapter<String>(this, R.layout.settings_list_item, settings));
 
-		setContentView(R.layout.settings);
+		lv.setOnItemClickListener(new OnItemClickListener() {
+		    public void onItemClick(AdapterView<?> parent, View view,
+		        int position, long id) {
+		    	switch (position)
+		    	{
+		    	case 0:
+		    	    Calendar c = Calendar.getInstance();
+		    	    hour = c.get(Calendar.HOUR_OF_DAY);
+		    	    minutes = c.get(Calendar.MINUTE);
+		    		showDialog(TIME_DIALOG_ID);
+		    		break;
+		    	case 1:
+		    		showDialog(NOTIFY_TYPE_DIALOG_ID);
+		    		break;
+		    	case 2:
+		    		showDialog(LED_DIALOG_ID);
+		    		break;
+		    	}
+		    }
+		  });
 
-		Button button = (Button) findViewById(R.id.contact_list);
+	    // get the current time
 
-		button.setOnClickListener(this);
 
-		mManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 	}
-
-	public void onClick(View v) {
-
-		Intent i = new Intent(this, BdayNotifier.class);
-
-		Notification note = new Notification(R.drawable.icon, "hehe", System.currentTimeMillis());
-
-		note.setLatestEventInfo(this, "title", "text",
-				PendingIntent.getActivity(this.getBaseContext(), 0, i, PendingIntent.FLAG_CANCEL_CURRENT));
-
-		mManager.notify(0, note);
-
+	@Override
+	protected Dialog onCreateDialog(int id) {
+	    switch (id) {
+	    case TIME_DIALOG_ID:
+	        return new TimePickerDialog(this,
+	                mTimeSetListener, hour, minutes, false);
+	    case LED_DIALOG_ID:
+    		AlertDialog.Builder ledColorBuilder = new AlertDialog.Builder(SettingsPage.this);
+    		ledColorBuilder.setTitle("Pick a color");
+    		String[] colors = getResources().getStringArray(R.array.led_color_array);
+    		ledColorBuilder.setItems(colors, new DialogInterface.OnClickListener() {
+    		    public void onClick(DialogInterface dialog, int item) {
+    		    	String[] colors = getResources().getStringArray(R.array.led_color_array);
+    		        ledColor = colors[item];
+    		        Log.w("SettingsPage", "ledColor  = " + ledColor);
+    		        dialog.dismiss();
+    		    }
+    		});
+    		alert_led_color = ledColorBuilder.create();
+	    	return alert_led_color;
+	    case NOTIFY_TYPE_DIALOG_ID:
+    		AlertDialog.Builder builder = new AlertDialog.Builder(SettingsPage.this);
+    		builder.setTitle("Notification Type");
+    		String[] notify_type = getResources().getStringArray(R.array.notify_type_array);
+    		builder.setSingleChoiceItems(notify_type, -1, new DialogInterface.OnClickListener() {
+    		    public void onClick(DialogInterface dialog, int item) {
+    		    	String[] notify_type = getResources().getStringArray(R.array.notify_type_array);
+    		    	notificationType = notify_type[item];
+    		        Log.w("SettingsPage", "Notification Type  = " + notificationType);
+    		        dialog.dismiss();
+    		    }
+    		});
+    		alert_notify_type = builder.create();
+	    	return alert_notify_type;
+	    }
+	    return null;
 	}
+	// the callback received when the user "sets" the time in the dialog
+	private TimePickerDialog.OnTimeSetListener mTimeSetListener =
+	    new TimePickerDialog.OnTimeSetListener() {
+	        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+	        	hour = hourOfDay;
+	        	minutes = minute;
+	    	    Log.w("SettingsPage", "Time hours = " + hour);
+	    	    Log.w("SettingsPage", "Time Minutes = " + minutes);
+	        }
+	    };
 }
