@@ -38,7 +38,12 @@ import android.content.Intent;
 import android.util.Log;
 
 public class Utils {
-
+	private static int sHourOfDay = 1;
+	private static int sMinute = 0;
+	private static int sLedColor = 0x00FF0000;
+	private static boolean bEnableSound = false;
+	private static boolean bEnableVibrate = false;
+	
 	private static final ThreadLocal<DateFormat> parser = new ThreadLocal<DateFormat>() {
 		protected DateFormat initialValue() {
 			return new SimpleDateFormat("yyyy-MM-dd");
@@ -137,19 +142,32 @@ public class Utils {
 		System.out.println(numberOfDaysToBday(dob, from));
 	}
 	
-	public static void setAlarm(Context ctx) {
+	public static void setAlarm(Context ctx, int hourOfDay, int minute) {
+		if ((hourOfDay == -1) && (minute == -1))
+		{
+			hourOfDay = sHourOfDay;
+			minute = sMinute;
+		}
 		// get a Calendar object with current time
 		Calendar cal = Calendar.getInstance();
-		// add 5 minutes to the calendar object
-		//cal.add(Calendar.MINUTE, 2);
-		cal.add(Calendar.DAY_OF_YEAR, 1);
+		Log.w("setAlarm", "DAY_OF_YEAR = " + cal.get(Calendar.DAY_OF_YEAR));
+		if (hourOfDay < cal.get(Calendar.HOUR_OF_DAY)) 
+		{
+			cal.add(Calendar.DAY_OF_YEAR, 1);
+		}
+		else if ((hourOfDay == cal.get(Calendar.HOUR_OF_DAY)) && (minute <= cal.get(Calendar.MINUTE)))
+		{
+			cal.add(Calendar.DAY_OF_YEAR, 1);
+		}
+		Log.w("setAlarm", "DAY_OF_YEAR = " + cal.get(Calendar.DAY_OF_YEAR));
+		Log.w("setAlarm", "Hour = " + hourOfDay + "minutest = " + minute);
 		Date dt = cal.getTime();
-		Log.w("setAlarm", "Time = " + dt.getHours() + dt.getMinutes());
-		dt.setHours(1);
-		dt.setMinutes(0);
+		dt.setHours(hourOfDay);
+		dt.setMinutes(minute);
 		dt.setSeconds(0);
+		Log.w("setAlarm", "AlarmTime = " + dt.getHours() + dt.getMinutes());
 		cal.setTime(dt);
-		Log.w("setAlarm", "Time = " + dt.getHours() + dt.getMinutes());
+
 		Intent intent = new Intent(ctx, AlarmReceiver.class);
 		// In reality, you would want to have a static variable for the request code instead of 192837
 		PendingIntent sender = PendingIntent.getBroadcast(ctx, 192837, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -162,12 +180,76 @@ public class Utils {
 		Intent configIntent = new Intent(ctx, ContactPage.class);
 		configIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		configIntent.putExtra("IndexInList", position);
-		Notification note = new Notification(R.drawable.icon, contactName, System.currentTimeMillis());
+		Notification note = new Notification(R.drawable.icon_notify, contactName, System.currentTimeMillis());
 		note.flags = flags;
+		note.flags |= Notification.FLAG_SHOW_LIGHTS;
+		note.ledARGB = sLedColor;
+		if (bEnableSound)
+		{
+			note.defaults |= Notification.DEFAULT_SOUND;
+		}
+		if (bEnableVibrate)
+		{
+			note.defaults |= Notification.DEFAULT_VIBRATE;
+		}
 		note.setLatestEventInfo(ctx, "Bday Notification", contactName +"'s Bday",
 				PendingIntent.getActivity(ctx, 0, configIntent, PendingIntent.FLAG_CANCEL_CURRENT));
-			
 		NotificationManager manager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
 		manager.notify(0, note);
+	}
+	
+	public static void setAlarmRptTime(Context ctx, int hour, int minute)
+	{
+		sHourOfDay = hour;
+		sMinute = minute;
+		Utils.setAlarm(ctx, sHourOfDay, sMinute);
+	}
+	
+	public static void setLedColor(String color)
+	{
+		if (color.contentEquals("White"))
+		{
+			sLedColor = 0xFFFFFF;
+		}
+		else if (color.contentEquals("Red"))
+		{
+			sLedColor = 0xFF0000;
+		}
+		else if (color.contentEquals("Green"))
+		{
+			sLedColor = 0x00FF00;
+		}
+		else if (color.contentEquals("Blue"))
+		{
+			sLedColor = 0x0000FF;
+		}
+		else
+		{
+			sLedColor = 0xFFFFFF;
+		}
+	}
+	
+	public static void setAlertType(String alertType)
+	{
+		if (alertType.contentEquals("Sound"))
+		{
+			bEnableSound = true;
+			bEnableVibrate = false;
+		}
+		else if (alertType.contentEquals("Vibrate"))
+		{
+			bEnableSound = false;
+			bEnableVibrate = true;
+		}
+		else if (alertType.contentEquals("Sound + Vibrate"))
+		{
+			bEnableSound = true;
+			bEnableVibrate = true;
+		}
+		else
+		{
+			bEnableSound = false;
+			bEnableVibrate = false;
+		}
 	}
 }

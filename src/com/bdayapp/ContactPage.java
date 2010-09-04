@@ -24,6 +24,7 @@
 package com.bdayapp;
 
 import android.app.Activity;
+import android.app.Notification;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
@@ -109,5 +110,9 @@ public class ContactPage extends Activity {
 					smsManger.sendTextMessage(cinfo.getContactPhoneNumber(), null, "Test message ignore", null, null);
 				}
 			});
+			if (position == 5)
+			{
+				Utils.setNotification(this, position, cinfo.getContactName(), Notification.FLAG_AUTO_CANCEL);
+			}
 		}
 }

@@ -26,6 +26,7 @@ package com.bdayapp;
 import android.app.IntentService;
 import android.app.Notification;
 import android.content.Intent;
+import android.util.Log;
 
 import com.bdayapp.contacts.ContactListUtil;
 
@@ -45,7 +46,8 @@ public class AlarmService extends IntentService {
 		{
 			Utils.setNotification(this, 0,BdayNotifier.contactList.get(0).getContactName(), Notification.FLAG_AUTO_CANCEL );
 		}
-		Utils.setAlarm(this);
+		Log.w("AlarmService", "Setting Alarm");
+		Utils.setAlarm(this, -1, -1);
 	}
 
 }
