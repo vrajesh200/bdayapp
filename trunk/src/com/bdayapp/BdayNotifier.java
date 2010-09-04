@@ -107,7 +107,8 @@ public class BdayNotifier extends Activity {
 			{
 				Utils.setNotification(BdayNotifier.this, 0, contactList.get(0).getContactName(), Notification.FLAG_AUTO_CANCEL);
 			}
-			Utils.setAlarm(BdayNotifier.this);
+			Log.w("LoadTask", "Setting Alarm");
+			Utils.setAlarm(BdayNotifier.this, -1, -1);
 			Log.w("LoadTask", "Post Execute done");
 
 		}

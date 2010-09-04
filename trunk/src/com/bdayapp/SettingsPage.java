@@ -32,7 +32,9 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.View.OnKeyListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -42,13 +44,10 @@ import android.widget.TimePicker;
 
 
 public class SettingsPage extends ListActivity{
-	private int hour;
-	private int minutes;
+
 	static final int TIME_DIALOG_ID = 0;
 	static final int LED_DIALOG_ID = 1;
 	static final int NOTIFY_TYPE_DIALOG_ID = 2;
-	String notificationType;	
-	String ledColor;
 	AlertDialog alert_led_color;
 	AlertDialog alert_notify_type;
 	public void onCreate(Bundle savedInstanceState) {
@@ -64,9 +63,6 @@ public class SettingsPage extends ListActivity{
 		    	switch (position)
 		    	{
 		    	case 0:
-		    	    Calendar c = Calendar.getInstance();
-		    	    hour = c.get(Calendar.HOUR_OF_DAY);
-		    	    minutes = c.get(Calendar.MINUTE);
 		    		showDialog(TIME_DIALOG_ID);
 		    		break;
 		    	case 1:
@@ -78,15 +74,22 @@ public class SettingsPage extends ListActivity{
 		    	}
 		    }
 		  });
+		lv.setOnKeyListener(new OnKeyListener() {
 
-	    // get the current time
-
-
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_BACK))
+				finish();
+				return true;
+			}
+		});
 	}
 	@Override
 	protected Dialog onCreateDialog(int id) {
 	    switch (id) {
 	    case TIME_DIALOG_ID:
+    	    Calendar c = Calendar.getInstance();
+    	    int hour = c.get(Calendar.HOUR_OF_DAY);
+    	    int minutes = c.get(Calendar.MINUTE);
 	        return new TimePickerDialog(this,
 	                mTimeSetListener, hour, minutes, false);
 	    case LED_DIALOG_ID:
@@ -96,8 +99,8 @@ public class SettingsPage extends ListActivity{
     		ledColorBuilder.setItems(colors, new DialogInterface.OnClickListener() {
     		    public void onClick(DialogInterface dialog, int item) {
     		    	String[] colors = getResources().getStringArray(R.array.led_color_array);
-    		        ledColor = colors[item];
-    		        Log.w("SettingsPage", "ledColor  = " + ledColor);
+    		        Log.w("SettingsPage", "ledColor  = " + colors[item]);
+    		        Utils.setLedColor(colors[item]);
     		        dialog.dismiss();
     		    }
     		});
@@ -110,8 +113,8 @@ public class SettingsPage extends ListActivity{
     		builder.setSingleChoiceItems(notify_type, -1, new DialogInterface.OnClickListener() {
     		    public void onClick(DialogInterface dialog, int item) {
     		    	String[] notify_type = getResources().getStringArray(R.array.notify_type_array);
-    		    	notificationType = notify_type[item];
-    		        Log.w("SettingsPage", "Notification Type  = " + notificationType);
+    		        Log.w("SettingsPage", "Notification Type  = " + notify_type[item]);
+    		        Utils.setAlertType(notify_type[item]);
     		        dialog.dismiss();
     		    }
     		});
@@ -124,10 +127,9 @@ public class SettingsPage extends ListActivity{
 	private TimePickerDialog.OnTimeSetListener mTimeSetListener =
 	    new TimePickerDialog.OnTimeSetListener() {
 	        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-	        	hour = hourOfDay;
-	        	minutes = minute;
-	    	    Log.w("SettingsPage", "Time hours = " + hour);
-	    	    Log.w("SettingsPage", "Time Minutes = " + minutes);
+	        	Utils.setAlarmRptTime(SettingsPage.this, hourOfDay, minute);
+	    	    Log.w("SettingsPage", "Time hours = " + hourOfDay);
+	    	    Log.w("SettingsPage", "Time Minutes = " + minute);
 	        }
 	    };
 }
