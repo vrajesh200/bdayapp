@@ -33,10 +33,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
-import android.provider.ContactsContract.Data;
 import android.provider.ContactsContract.CommonDataKinds.Event;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
-import android.util.Log;
+import android.provider.ContactsContract.Data;
 
 import com.bdayapp.Utils;
 
@@ -56,30 +55,26 @@ public class ContactListUtil {
 		int rowNum = contactCursor.getCount();
 		contactCursor.moveToFirst();
 
-		ArrayList<ContactInfo> contact_list = new ArrayList<ContactInfo>();
+		ArrayList<ContactInfo> contactList = new ArrayList<ContactInfo>();
+
 		for (int i = 0; i < rowNum; i++) {
 			contactCursor.moveToPosition(i);
-			// Log.w("BdayNotifier", "Name = " + contactCursor.getString(1));
 			Date dob = ContactListUtil.getContactDob(ctx, contactCursor.getString(0));
-			// Log.w("BDayNOtifier", "DOB = " + Dob);
-			if (dob != null) {
-				Log.w("BdayNotifier", "Date = " + dob.toGMTString());
-				ContactInfo cinfo = new ContactInfo();
-				cinfo.setContactName(contactCursor.getString(1));
-				cinfo.setDateOfBirth(dob);
-				cinfo.setContactId(contactCursor.getString(0));
-				cinfo.setContactPhotoUri(ContactListUtil.getContactPhoto(ctx, cinfo.getContactId()));
 
-				String phoneNum = getContactPhoneNum(ctx, contactCursor.getString(0));
-				Log.w("ContactListUtil", cinfo.getContactName() + " = " + phoneNum);
-				cinfo.setContactPhoneNumber(phoneNum);
-				contact_list.add(cinfo);
+			if (dob != null) {
+				ContactInfo cInfo = new ContactInfo();
+				cInfo.setContactName(contactCursor.getString(1));
+				cInfo.setDateOfBirth(dob);
+				cInfo.setContactId(contactCursor.getString(0));
+				cInfo.setContactPhotoUri(ContactListUtil.getContactPhoto(ctx, cInfo.getContactId()));
+				cInfo.setContactPhoneNumber(getContactPhoneNum(ctx, cInfo.getContactId()));
+				contactList.add(cInfo);
 			}
 		}
-		Collections.sort(contact_list);
-		Log.w("BdayNotifier", "Num of items in contact_list = " + contact_list.size());
+		contactCursor.close();
+		Collections.sort(contactList);
 
-		return contact_list;
+		return contactList;
 	}
 
 	public static Date getContactDob(Context ctx, String ContactID) {
@@ -102,33 +97,49 @@ public class ContactListUtil {
 	public static Uri getContactPhoto(Context ctx, String contactID) {
 		Uri person = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, Long.parseLong(contactID));
 		Uri photo = Uri.withAppendedPath(person, ContactsContract.Contacts.Photo.CONTENT_DIRECTORY);
-
-		Log.w("getContactPhoto", "photo Uri = " + photo.toString());
 		return photo;
 	}
 
-	public static String getContactPhoneNum(Context ctx, String ContactID) {
-		String PhoneNum = "";
+	public static String getContactPhoneNum(Context ctx, String contactId) {
+		String[] nums = getContactPhoneNums(ctx, contactId);
+
+		if (nums.length == 0)
+		{
+			return "";
+		}
+		else
+		{
+			return nums[0];
+		}
+	}
+
+	public static String[] getContactPhoneNums(Context ctx, String contactId)
+	{
 		Cursor c = ctx.getContentResolver().query(
 				Data.CONTENT_URI,
 				new String[] { Phone.NUMBER },
-				Data.CONTACT_ID + "=" + ContactID + " AND " + Data.MIMETYPE + "= '" + Phone.CONTENT_ITEM_TYPE
+				Data.CONTACT_ID + "=" + contactId + " AND " + Data.MIMETYPE + "= '" + Phone.CONTENT_ITEM_TYPE
 						+ "' AND " + Phone.TYPE + "=" + Phone.TYPE, null, Data.DISPLAY_NAME);
+
+		String[] numbers = new String[0];
+
 		if (c != null) {
 			c.moveToFirst();
 
-			Log.w("getContactPhoneNum", "Num of Columns = " + c.getColumnCount());
-			for (int i = 0; i < c.getColumnCount(); i++)
+			int count = c.getCount();
+
+			numbers = new String[count];
+
+			for (int i = 0; i < count; i++)
 			{
-				Log.w("getContactPhoneNum", "Column[" +i +"] = " + c.getColumnName(i));
+				c.moveToPosition(i);
+
+				numbers[i] = c.getString(0);
 			}
-			Log.w("getContactPhoneNum", "Num of phone numbers  = " + c.getCount());
-			if (c.getCount() != 0) {
-				PhoneNum = c.getString(0);
-			}
+
 			c.close();
 		}
-		return PhoneNum;
+		return numbers;
 	}
 
 	public static String getNextBdayText(ContactInfo info)
@@ -139,21 +150,20 @@ public class ContactListUtil {
 		cal.setTime((Date)info.getDateOfBirth().clone());
 
 		int numOfDays = info.getNumOfDaysToNextBday();
-
 		cal.add(Calendar.DAY_OF_MONTH, -numOfDays);
 
-		int diff = curYear - cal.get(Calendar.YEAR);
+		int yearsCompleted = curYear - cal.get(Calendar.YEAR);
 
 		if (numOfDays == 0)
 		{
-			return "Turned " + diff + " Today";
+			return "Turned " + yearsCompleted + " Today";
 		}
 
 		if (numOfDays == 1)
 		{
-			return "Turns " + diff + " Tomorrow";
+			return "Turns " + yearsCompleted + " Tomorrow";
 		}
 
-		return "Turns " + diff + " in " + numOfDays + " days";
+		return "Turns " + yearsCompleted + " in " + numOfDays + " days";
 	}
 }
