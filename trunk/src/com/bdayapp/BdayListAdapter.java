@@ -23,15 +23,13 @@
 
 package com.bdayapp;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -44,12 +42,13 @@ import com.bdayapp.contacts.ContactListUtil;
 public class BdayListAdapter extends BaseAdapter {
 
 	private ArrayList<ContactInfo> elements;
-	private Context c;
+	private Context ctx;
+	private Drawable defaultDrawable;
 
-	public BdayListAdapter (Context cxt, ArrayList<ContactInfo> list)
-	{
+	public BdayListAdapter(Context cxt, ArrayList<ContactInfo> list) {
 		elements = list;
-		c = cxt;
+		ctx = cxt;
+		defaultDrawable = ctx.getResources().getDrawable(R.drawable.stock_contact_photo);
 	}
 
 	public int getCount() {
@@ -57,55 +56,50 @@ public class BdayListAdapter extends BaseAdapter {
 	}
 
 	public Object getItem(int position) {
-		// TODO Auto-generated method stub
 		return elements.get(position);
 	}
 
 	public long getItemId(int position) {
-		// TODO Auto-generated method stub
 		return position;
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
-		TextView tview_cname;
-		TextView tview_dob;
-		View v = convertView;
-		boolean contactPhotoFound = true;
-        if (v == null) {
-        	v = View.inflate(c, R.layout.list_item, null);
-        }
-        tview_cname = (TextView)v.findViewById(R.id.contact_name);
-        tview_cname.setText((elements.get(position)).getContactName());
-        tview_dob = (TextView)v.findViewById(R.id.date_of_birth);
-        tview_dob.setText(Utils.format(elements.get(position).getDateOfBirth()));
 
-        TextView tview_next = (TextView)v.findViewById(R.id.next_bday);
-        tview_next.setText(ContactListUtil.getNextBdayText(elements.get(position)));
-        tview_next.setTextColor(ColorStateList.valueOf(0xFFFF0000));
+		if (convertView == null) {
+			convertView = View.inflate(ctx, R.layout.list_item, null);
+		}
 
-        Bitmap bmap = null;
-        //Log.w("getView", "Contact name = " + (elements.get(position)).contactName.toString());
-        try {
-			bmap = MediaStore.Images.Media.getBitmap(c.getContentResolver(), elements.get(position).getContactPhotoUri());
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			Log.w("getView", "File not found for" + (elements.get(position)).getContactName());
-			contactPhotoFound = false;
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		ContactInfo contactInfo = elements.get(position);
+
+		// ContactName
+		TextView textView = (TextView) convertView.findViewById(R.id.contact_name);
+		textView.setText(contactInfo.getContactName());
+
+		// ContactDOB
+		textView = (TextView) convertView.findViewById(R.id.date_of_birth);
+		textView.setText(Utils.format(contactInfo.getDateOfBirth()));
+
+		// DaysToBday
+		textView = (TextView) convertView.findViewById(R.id.next_bday);
+		textView.setText(ContactListUtil.getNextBdayText(contactInfo));
+		textView.setTextColor(ColorStateList.valueOf(0xFFFF0000));
+
+		// ContactPhoto
+		Bitmap bitmap = null;
+		try {
+			bitmap = MediaStore.Images.Media.getBitmap(ctx.getContentResolver(), contactInfo.getContactPhotoUri());
+		} catch (Exception e) {
+			// nothing to do, we didn't get the image :(
 		}
-		ImageView iview_photo = (ImageView)v.findViewById(R.id.contact_image);
-		if (contactPhotoFound)
-		{
-			iview_photo.setImageBitmap(bmap);
-			Log.w("getView", "Image dimension = " + bmap.getHeight() + "x" + bmap.getWidth());
+
+		ImageView imageView = (ImageView) convertView.findViewById(R.id.contact_image);
+
+		if (bitmap == null) {
+			imageView.setImageDrawable(defaultDrawable);
+		} else {
+			imageView.setImageBitmap(bitmap);
 		}
-		else
-		{
-			iview_photo.setImageDrawable(c.getResources().getDrawable(R.drawable.stock_contact_photo));
-		}
-        return v;
+
+		return convertView;
 	}
-
 }
