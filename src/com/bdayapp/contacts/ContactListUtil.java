@@ -14,13 +14,6 @@
  * limitations under the License.
  */
 
-//=====================================================================================================================
-// $HeadURL$
-// Checked in by: $Author$
-// $Date$
-// $Revision$
-//=====================================================================================================================
-
 package com.bdayapp.contacts;
 
 import java.util.ArrayList;
@@ -163,7 +156,7 @@ public class ContactListUtil {
 			}
 			c.close();
 		}
-		
+
 		return contactName;
 	}
 	public static String getNextBdayText(ContactInfo info)

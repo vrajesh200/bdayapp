@@ -14,13 +14,6 @@
  * limitations under the License.
  */
 
-//=====================================================================================================================
-// $HeadURL$
-// Checked in by: $Author$
-// $Date$
-// $Revision$
-//=====================================================================================================================
-
 package com.bdayapp;
 
 import java.util.ArrayList;
@@ -132,5 +125,5 @@ public class BdayNotifier extends Activity {
 		 }
 	}
 
-	
+
 }

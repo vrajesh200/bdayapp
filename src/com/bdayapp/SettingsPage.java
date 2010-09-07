@@ -14,13 +14,6 @@
  * limitations under the License.
  */
 
-//=====================================================================================================================
-// $HeadURL$
-// Checked in by: $Author$
-// $Date$
-// $Revision$
-//=====================================================================================================================
-
 package com.bdayapp;
 
 import java.util.Calendar;
@@ -52,7 +45,7 @@ public class SettingsPage extends ListActivity{
 	AlertDialog alert_notify_type;
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		String[] settings = getResources().getStringArray(R.array.settings_array);
 		ListView lv = getListView();
 		lv.setAdapter(new ArrayAdapter<String>(this, R.layout.settings_list_item, settings));
