@@ -16,12 +16,11 @@
 
 package com.bdayapp;
 
-import java.util.Calendar;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,15 +33,19 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TimePicker;
 
+import com.bdayapp.PreferenceUtil.NotificationTime;
+
 
 
 public class SettingsPage extends ListActivity{
 
-	static final int TIME_DIALOG_ID = 0;
-	static final int LED_DIALOG_ID = 1;
-	static final int NOTIFY_TYPE_DIALOG_ID = 2;
+	private static final int TIME_DIALOG_ID = 0;
+	private static final int LED_DIALOG_ID = 1;
+	private static final int NOTIFY_TYPE_DIALOG_ID = 2;
+
 	AlertDialog alert_led_color;
 	AlertDialog alert_notify_type;
+
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
@@ -80,20 +83,20 @@ public class SettingsPage extends ListActivity{
 	protected Dialog onCreateDialog(int id) {
 	    switch (id) {
 	    case TIME_DIALOG_ID:
-    	    Calendar c = Calendar.getInstance();
-    	    int hour = c.get(Calendar.HOUR_OF_DAY);
-    	    int minutes = c.get(Calendar.MINUTE);
+	    	NotificationTime time = PreferenceUtil.getNotifierTime(this);
+    	    int hour = time.getHour();
+    	    int minutes = time.getMinutes();
 	        return new TimePickerDialog(this,
 	                mTimeSetListener, hour, minutes, false);
 	    case LED_DIALOG_ID:
     		AlertDialog.Builder ledColorBuilder = new AlertDialog.Builder(SettingsPage.this);
     		ledColorBuilder.setTitle("Pick a color");
-    		String[] colors = getResources().getStringArray(R.array.led_color_array);
-    		ledColorBuilder.setItems(colors, new DialogInterface.OnClickListener() {
+    		final String[] colors = PreferenceUtil.COLOR_STRINGS;
+    		int colorIndex = PreferenceUtil.getSelectedColorIndex(this);
+    		ledColorBuilder.setSingleChoiceItems(colors, colorIndex, new DialogInterface.OnClickListener() {
     		    public void onClick(DialogInterface dialog, int item) {
-    		    	String[] colors = getResources().getStringArray(R.array.led_color_array);
     		        Log.w("SettingsPage", "ledColor  = " + colors[item]);
-    		        Utils.setLedColor(colors[item]);
+    		        PreferenceUtil.setNotificationLedColor(SettingsPage.this, colors[item]);
     		        dialog.dismiss();
     		    }
     		});
@@ -103,11 +106,12 @@ public class SettingsPage extends ListActivity{
     		AlertDialog.Builder builder = new AlertDialog.Builder(SettingsPage.this);
     		builder.setTitle("Notification Type");
     		String[] notify_type = getResources().getStringArray(R.array.notify_type_array);
-    		builder.setSingleChoiceItems(notify_type, -1, new DialogInterface.OnClickListener() {
+    		int selectedIndex = notificationSelectedIndex(this);
+    		builder.setSingleChoiceItems(notify_type, selectedIndex, new DialogInterface.OnClickListener() {
     		    public void onClick(DialogInterface dialog, int item) {
     		    	String[] notify_type = getResources().getStringArray(R.array.notify_type_array);
     		        Log.w("SettingsPage", "Notification Type  = " + notify_type[item]);
-    		        Utils.setAlertType(notify_type[item]);
+    		        PreferenceUtil.setAlertType(SettingsPage.this, notify_type[item]);
     		        dialog.dismiss();
     		    }
     		});
@@ -120,9 +124,32 @@ public class SettingsPage extends ListActivity{
 	private TimePickerDialog.OnTimeSetListener mTimeSetListener =
 	    new TimePickerDialog.OnTimeSetListener() {
 	        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-	        	Utils.setAlarmRptTime(SettingsPage.this, hourOfDay, minute);
+	        	PreferenceUtil.storeNotifierTime(SettingsPage.this, hourOfDay, minute);
 	    	    Log.w("SettingsPage", "Time hours = " + hourOfDay);
 	    	    Log.w("SettingsPage", "Time Minutes = " + minute);
 	        }
 	    };
+
+	private static int notificationSelectedIndex(Context ctx)
+	{
+		boolean sound = PreferenceUtil.soundNotificationEnabled(ctx);
+		boolean vibrate = PreferenceUtil.vibrateNotificationEnabled(ctx);
+
+		if (sound && vibrate)
+		{
+			return 3;
+		}
+
+		if (sound)
+		{
+			return 1;
+		}
+
+		if (vibrate)
+		{
+			return 2;
+		}
+
+		return 0;
+	}
 }

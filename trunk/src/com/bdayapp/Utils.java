@@ -22,6 +22,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.bdayapp.PreferenceUtil.NotificationTime;
+
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -31,11 +33,6 @@ import android.content.Intent;
 import android.util.Log;
 
 public class Utils {
-	private static int sHourOfDay = 1;
-	private static int sMinute = 0;
-	private static int sLedColor = 0x00FF0000;
-	private static boolean bEnableSound = false;
-	private static boolean bEnableVibrate = false;
 
 	private static final ThreadLocal<DateFormat> parser = new ThreadLocal<DateFormat>() {
 		protected DateFormat initialValue() {
@@ -135,12 +132,12 @@ public class Utils {
 		System.out.println(numberOfDaysToBday(dob, from));
 	}
 
-	public static void setAlarm(Context ctx, int hourOfDay, int minute) {
-		if ((hourOfDay == -1) && (minute == -1))
-		{
-			hourOfDay = sHourOfDay;
-			minute = sMinute;
-		}
+	public static void setAlarm(Context ctx) {
+
+		NotificationTime time = PreferenceUtil.getNotifierTime(ctx);
+		int hourOfDay = time.getHour();
+		int minute = time.getMinutes();
+
 		// get a Calendar object with current time
 		Calendar cal = Calendar.getInstance();
 		Log.w("setAlarm", "DAY_OF_YEAR = " + cal.get(Calendar.DAY_OF_YEAR));
@@ -176,12 +173,12 @@ public class Utils {
 		Notification note = new Notification(R.drawable.icon_notify, contactName, System.currentTimeMillis());
 		note.flags = flags;
 		note.flags |= Notification.FLAG_SHOW_LIGHTS;
-		note.ledARGB = sLedColor;
-		if (bEnableSound)
+		note.ledARGB = PreferenceUtil.getNotificationLedColor(ctx);
+		if (PreferenceUtil.soundNotificationEnabled(ctx))
 		{
 			note.defaults |= Notification.DEFAULT_SOUND;
 		}
-		if (bEnableVibrate)
+		if (PreferenceUtil.vibrateNotificationEnabled(ctx))
 		{
 			note.defaults |= Notification.DEFAULT_VIBRATE;
 		}
@@ -189,60 +186,5 @@ public class Utils {
 				PendingIntent.getActivity(ctx, 0, configIntent, PendingIntent.FLAG_CANCEL_CURRENT));
 		NotificationManager manager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
 		manager.notify(0, note);
-	}
-
-	public static void setAlarmRptTime(Context ctx, int hour, int minute)
-	{
-		sHourOfDay = hour;
-		sMinute = minute;
-		Utils.setAlarm(ctx, sHourOfDay, sMinute);
-	}
-
-	public static void setLedColor(String color)
-	{
-		if (color.contentEquals("White"))
-		{
-			sLedColor = 0xFFFFFF;
-		}
-		else if (color.contentEquals("Red"))
-		{
-			sLedColor = 0xFF0000;
-		}
-		else if (color.contentEquals("Green"))
-		{
-			sLedColor = 0x00FF00;
-		}
-		else if (color.contentEquals("Blue"))
-		{
-			sLedColor = 0x0000FF;
-		}
-		else
-		{
-			sLedColor = 0xFFFFFF;
-		}
-	}
-
-	public static void setAlertType(String alertType)
-	{
-		if (alertType.contentEquals("Sound"))
-		{
-			bEnableSound = true;
-			bEnableVibrate = false;
-		}
-		else if (alertType.contentEquals("Vibrate"))
-		{
-			bEnableSound = false;
-			bEnableVibrate = true;
-		}
-		else if (alertType.contentEquals("Sound + Vibrate"))
-		{
-			bEnableSound = true;
-			bEnableVibrate = true;
-		}
-		else
-		{
-			bEnableSound = false;
-			bEnableVibrate = false;
-		}
 	}
 }
