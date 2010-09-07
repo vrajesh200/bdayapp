@@ -53,12 +53,15 @@ public class ContactPage extends Activity {
 			Uri contactPhoto = ContactListUtil.getContactPhoto(this, contactID);
 			final String[] phoneNum = ContactListUtil.getContactPhoneNums(this, contactID);
 
+			// Set Contact Name
 			TextView tview_cname = (TextView)findViewById(R.id.contact_name_1);
 	        tview_cname.setText(contactName);
 
+	        // Set Contact DoB	        
 	        TextView tview_dob = (TextView)findViewById(R.id.date_of_birth_1);
 	        tview_dob.setText(Utils.format(dateOfBirth));
 
+	        // Set DaysToGo
 	        TextView tview_next = (TextView)findViewById(R.id.next_bday_1);
 	        tview_next.setText(String.valueOf(numOfDaysLeft) + " days to Go");
 	        tview_next.setTextColor(ColorStateList.valueOf(0xFFFF0000));
@@ -70,6 +73,7 @@ public class ContactPage extends Activity {
 			}
 			ImageView iview_photo = (ImageView)findViewById(R.id.contact_image_1);
 
+			// Set Contact Photo
 			if (bmap != null)
 			{
 				iview_photo.setImageBitmap(bmap);
@@ -79,6 +83,7 @@ public class ContactPage extends Activity {
 				iview_photo.setImageDrawable(this.getResources().getDrawable(R.drawable.stock_contact_photo));
 			}
 
+			// Set Contact Phone Number
 			TextView tviewPhNum = (TextView)findViewById(R.id.contac_number);
 			tviewPhNum.setText(phoneNum[0]);
 
@@ -112,6 +117,8 @@ public class ContactPage extends Activity {
 					smsManger.sendTextMessage(phoneNum[0], null, "Test message ignore", null, null);
 				}
 			});
+			
+			// Test Code: Delete later
 			if (contactID.contentEquals("414"))
 			{
 				Utils.setNotification(this, contactID, contactName, Notification.FLAG_AUTO_CANCEL);

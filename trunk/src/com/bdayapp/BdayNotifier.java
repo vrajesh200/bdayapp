@@ -71,9 +71,7 @@ public class BdayNotifier extends Activity {
 		@Override
 		protected ArrayList<ContactInfo> doInBackground(Context... params) {
 			// perform long running operation operation
-			ArrayList<ContactInfo> mcontactList = ContactListUtil.getContactList(params[0]);
-
-			return mcontactList;
+			return ContactListUtil.getContactList(params[0]);
 		}
 
 		/* (non-Javadoc)
@@ -83,12 +81,12 @@ public class BdayNotifier extends Activity {
 		protected void onPostExecute(ArrayList<ContactInfo> result) {
 			// execution of result of Long time consuming operation
 			setContentView(R.layout.main);
-			ListView mContactList;
-			mContactList = (ListView) findViewById(R.id.contact_list);
+			ListView lView;
+			lView = (ListView) findViewById(R.id.contact_list);
 			BdayListAdapter m_Adapter = new BdayListAdapter(BdayNotifier.this, result);
 			BdayNotifier.contactList = result;
-			mContactList.setAdapter(m_Adapter);
-			mContactList.setOnItemClickListener(new OnItemClickListener() {
+			lView.setAdapter(m_Adapter);
+			lView.setOnItemClickListener(new OnItemClickListener() {
 				public void onItemClick(AdapterView<?> parent, View view,
 				        int position, long id) {
 					Intent i = new Intent(BdayNotifier.this, ContactPage.class);

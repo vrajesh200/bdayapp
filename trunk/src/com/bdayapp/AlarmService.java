@@ -16,11 +16,14 @@
 
 package com.bdayapp;
 
+import java.util.ArrayList;
+
 import android.app.IntentService;
 import android.app.Notification;
 import android.content.Intent;
 import android.util.Log;
 
+import com.bdayapp.contacts.ContactInfo;
 import com.bdayapp.contacts.ContactListUtil;
 
 public class AlarmService extends IntentService {
@@ -31,14 +34,12 @@ public class AlarmService extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		// TODO Auto-generated method stub
-		if (BdayNotifier.contactList == null)
+
+		ArrayList<ContactInfo> contactList = ContactListUtil.getContactList(this);
+		if (contactList.get(0).getNumOfDaysToNextBday() == 0)
 		{
-			BdayNotifier.contactList = ContactListUtil.getContactList(this);
-		}
-		if (BdayNotifier.contactList.get(0).getNumOfDaysToNextBday() == 0)
-		{
-			Utils.setNotification(this, BdayNotifier.contactList.get(0).getContactId(),
-					BdayNotifier.contactList.get(0).getContactName(), Notification.FLAG_AUTO_CANCEL );
+			Utils.setNotification(this, contactList.get(0).getContactId(),
+					contactList.get(0).getContactName(), Notification.FLAG_AUTO_CANCEL );
 		}
 		Log.w("AlarmService", "Setting Alarm");
 		Utils.setAlarm(this, -1, -1);
