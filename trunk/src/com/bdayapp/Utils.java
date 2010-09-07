@@ -14,13 +14,6 @@
  * limitations under the License.
  */
 
-//=====================================================================================================================
-// $HeadURL$
-// Checked in by: $Author$
-// $Date$
-// $Revision$
-//=====================================================================================================================
-
 package com.bdayapp;
 
 import java.text.DateFormat;
@@ -43,7 +36,7 @@ public class Utils {
 	private static int sLedColor = 0x00FF0000;
 	private static boolean bEnableSound = false;
 	private static boolean bEnableVibrate = false;
-	
+
 	private static final ThreadLocal<DateFormat> parser = new ThreadLocal<DateFormat>() {
 		protected DateFormat initialValue() {
 			return new SimpleDateFormat("yyyy-MM-dd");
@@ -141,7 +134,7 @@ public class Utils {
 		Date from = parse("2011-08-25");
 		System.out.println(numberOfDaysToBday(dob, from));
 	}
-	
+
 	public static void setAlarm(Context ctx, int hourOfDay, int minute) {
 		if ((hourOfDay == -1) && (minute == -1))
 		{
@@ -151,7 +144,7 @@ public class Utils {
 		// get a Calendar object with current time
 		Calendar cal = Calendar.getInstance();
 		Log.w("setAlarm", "DAY_OF_YEAR = " + cal.get(Calendar.DAY_OF_YEAR));
-		if (hourOfDay < cal.get(Calendar.HOUR_OF_DAY)) 
+		if (hourOfDay < cal.get(Calendar.HOUR_OF_DAY))
 		{
 			cal.add(Calendar.DAY_OF_YEAR, 1);
 		}
@@ -175,7 +168,7 @@ public class Utils {
 		AlarmManager am = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
 		am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sender);
 	}
-	
+
 	public static void setNotification(Context ctx, String ContactID, String contactName, int flags) {
 		Intent configIntent = new Intent(ctx, ContactPage.class);
 		configIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -197,14 +190,14 @@ public class Utils {
 		NotificationManager manager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
 		manager.notify(0, note);
 	}
-	
+
 	public static void setAlarmRptTime(Context ctx, int hour, int minute)
 	{
 		sHourOfDay = hour;
 		sMinute = minute;
 		Utils.setAlarm(ctx, sHourOfDay, sMinute);
 	}
-	
+
 	public static void setLedColor(String color)
 	{
 		if (color.contentEquals("White"))
@@ -228,7 +221,7 @@ public class Utils {
 			sLedColor = 0xFFFFFF;
 		}
 	}
-	
+
 	public static void setAlertType(String alertType)
 	{
 		if (alertType.contentEquals("Sound"))

@@ -14,13 +14,6 @@
  * limitations under the License.
  */
 
-//=====================================================================================================================
-// $HeadURL$
-// Checked in by: $Author$
-// $Date$
-// $Revision$
-//=====================================================================================================================
-
 package com.bdayapp;
 
 import android.content.BroadcastReceiver;
@@ -35,7 +28,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 		Intent alarmIntent = new Intent(context, AlarmService.class);
 		alarmIntent.putExtra("IsAlarmWakeUp", true);
 		context.startService(alarmIntent);
-		
+
 	}
 
 }

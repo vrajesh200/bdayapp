@@ -14,13 +14,6 @@
  * limitations under the License.
  */
 
-//=====================================================================================================================
-// $HeadURL$
-// Checked in by: $Author$
-// $Date$
-// $Revision$
-//=====================================================================================================================
-
 package com.bdayapp;
 
 import java.util.Date;
@@ -53,19 +46,19 @@ public class ContactPage extends Activity {
 			setContentView(R.layout.contact_page);
 			Bundle bundle = this.getIntent().getExtras();
 			String contactID = bundle.getString("ContactID");
-			
+
 			String contactName = ContactListUtil.getContactName(this, contactID);
 			Date dateOfBirth = ContactListUtil.getContactDob(this, contactID);
 			int numOfDaysLeft = Utils.numberOfDaysToBday(dateOfBirth) ;
 			Uri contactPhoto = ContactListUtil.getContactPhoto(this, contactID);
 			final String[] phoneNum = ContactListUtil.getContactPhoneNums(this, contactID);
-			
+
 			TextView tview_cname = (TextView)findViewById(R.id.contact_name_1);
 	        tview_cname.setText(contactName);
-	        
+
 	        TextView tview_dob = (TextView)findViewById(R.id.date_of_birth_1);
 	        tview_dob.setText(Utils.format(dateOfBirth));
-	        
+
 	        TextView tview_next = (TextView)findViewById(R.id.next_bday_1);
 	        tview_next.setText(String.valueOf(numOfDaysLeft) + " days to Go");
 	        tview_next.setTextColor(ColorStateList.valueOf(0xFFFF0000));
