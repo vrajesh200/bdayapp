@@ -16,6 +16,7 @@
 
 package com.bdayapp;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import android.app.Activity;
@@ -33,6 +34,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bdayapp.contacts.ContactListUtil;
+import com.bdayapp.contacts.PhoneNumInfo;
 
 public class ContactPage extends Activity {
 
@@ -48,7 +50,7 @@ public class ContactPage extends Activity {
 			Date dateOfBirth = ContactListUtil.getContactDob(this, contactID);
 			int numOfDaysLeft = Utils.numberOfDaysToBday(dateOfBirth) ;
 			Uri contactPhoto = ContactListUtil.getContactPhoto(this, contactID);
-			final String[] phoneNum = ContactListUtil.getContactPhoneNums(this, contactID);
+			final ArrayList<PhoneNumInfo> phoneNum = ContactListUtil.getContactPhoneNums(this, contactID);
 
 			// Set Contact Name
 			TextView tview_cname = (TextView)findViewById(R.id.contact_name_1);

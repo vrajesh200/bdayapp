@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 
 import android.net.Uri;
@@ -37,7 +38,10 @@ public class ContactInfo implements Comparable<ContactInfo>, Serializable {
 	private int numOfDaysToNextBday;
 	private Uri contactPhotoUri;
 	private String[] phoneNumber;
+	private ArrayList<PhoneNumInfo> phoneNumberInfo;
+	
 
+	
 	public void setContactId(String contactId) {
 		this.contactId = contactId;
 	}
@@ -64,6 +68,14 @@ public class ContactInfo implements Comparable<ContactInfo>, Serializable {
 		this.phoneNumber = phoneNumber;
 	}
 
+	public void setContactPhoneNumberInfo(ArrayList<PhoneNumInfo> info) {
+		this.phoneNumberInfo = info;
+	}
+	
+	public ArrayList<PhoneNumInfo> getContactPhoneNumberInfo() {
+		return phoneNumberInfo;
+	}
+	
 	public Date getDateOfBirth() {
 		return dateOfBirth;
 	}

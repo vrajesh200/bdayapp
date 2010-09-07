@@ -26,12 +26,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
-import android.provider.ContactsContract.Data;
 import android.provider.ContactsContract.CommonDataKinds.Event;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
-import android.util.Log;
+import android.provider.ContactsContract.Data;
 
 import com.bdayapp.Utils;
+import com.bdayapp.contacts.PhoneNumInfo;
 
 public class ContactListUtil {
 
@@ -61,7 +61,7 @@ public class ContactListUtil {
 				cInfo.setDateOfBirth(dob);
 				cInfo.setContactId(contactCursor.getString(0));
 				cInfo.setContactPhotoUri(ContactListUtil.getContactPhoto(ctx, cInfo.getContactId()));
-				cInfo.setContactPhoneNumber(getContactPhoneNum(ctx, cInfo.getContactId()));
+				cInfo.setContactPhoneNumberInfo(getContactPhoneNums(ctx, cInfo.getContactId()));
 				contactList.add(cInfo);
 			}
 		}
@@ -94,33 +94,36 @@ public class ContactListUtil {
 		return photo;
 	}
 
-	public static String[] getContactPhoneNum(Context ctx, String contactId) {
-		String[] nums = getContactPhoneNums(ctx, contactId);
-		return nums;
-	}
-
-	public static String[] getContactPhoneNums(Context ctx, String contactId)
+	public static ArrayList<PhoneNumInfo> getContactPhoneNums(Context ctx, String contactId)
 	{
 		Cursor c = ctx.getContentResolver().query(
 				Data.CONTENT_URI,
-				new String[] { Phone.NUMBER },
+				new String[] { Phone.NUMBER, Phone.TYPE, Phone.LABEL },
 				Data.CONTACT_ID + "=" + contactId + " AND " + Data.MIMETYPE + "= '" + Phone.CONTENT_ITEM_TYPE
-						+ "' AND " + Phone.TYPE + "=" + Phone.TYPE, null, Data.DISPLAY_NAME);
+						+ "'", null, Data.DISPLAY_NAME);
 
-		String[] numbers = new String[0];
+		 ArrayList<PhoneNumInfo> numbers = new  ArrayList<PhoneNumInfo>();
 
 		if (c != null) {
 			c.moveToFirst();
 
 			int count = c.getCount();
-
-			numbers = new String[count];
-
 			for (int i = 0; i < count; i++)
 			{
+				PhoneNumInfo phInfo = new PhoneNumInfo();
 				c.moveToPosition(i);
-
-				numbers[i] = c.getString(0);
+				phInfo.setPhoneNum(c.getString(0));
+				if (Integer.parseInt(c.getString(1)) == Phone.TYPE_CUSTOM)
+				{
+					phInfo.setPhoneType(c.getString(2));
+				}
+				else
+				{
+					CharSequence s2 = Phone.getTypeLabel(ctx.getResources(),
+											Integer.valueOf(c.getString(1)), null);
+					phInfo.setPhoneType(s2.toString());
+				}
+				numbers.add(phInfo);
 			}
 
 			c.close();
@@ -136,14 +139,9 @@ public class ContactListUtil {
 				null, null);
 		if (c != null)
 		{
-			Log.w("getContactName", "Cursor is not null" );
 			c.moveToFirst();
 			if (c.getCount() != 0)
 			{
-				Log.w("getContactName", "Count = " + c.getCount());
-				Log.w("getContactName", "Clomun Count = " + c.getColumnCount());
-				Log.w("getContactName", "Index name = " + c.getColumnName(0));
-				Log.w("getContactName", "contactID = " + contactID);
 				contactName = c.getString(0);
 			}
 			c.close();
