@@ -42,7 +42,7 @@ public class AlarmService extends IntentService {
 					contactList.get(0).getContactName(), Notification.FLAG_AUTO_CANCEL );
 		}
 		Log.w("AlarmService", "Setting Alarm");
-		Utils.setAlarm(this, -1, -1);
+		Utils.setAlarm(this);
 	}
 
 }
