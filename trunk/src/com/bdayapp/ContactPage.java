@@ -20,19 +20,16 @@ import java.util.Date;
 
 import android.app.Activity;
 import android.app.Notification;
-import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.telephony.SmsManager;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
-import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bdayapp.contacts.ContactListUtil;
@@ -83,9 +80,10 @@ public class ContactPage extends Activity {
 				iview_photo.setImageDrawable(this.getResources().getDrawable(R.drawable.stock_contact_photo));
 			}
 
+			ListView phoneNumList = (ListView)findViewById(R.id.phonenum_list);
+			PhoneNumListAdapter mPhAdapter = new PhoneNumListAdapter(this, phoneNum);
+			phoneNumList.setAdapter(mPhAdapter);
 			// Set Contact Phone Number
-			TextView tviewPhNum = (TextView)findViewById(R.id.contac_number);
-			tviewPhNum.setText(phoneNum[0]);
 
 			View v = View.inflate(this, R.layout.contact_page, null);
 			v.setOnKeyListener(new OnKeyListener() {
@@ -97,27 +95,7 @@ public class ContactPage extends Activity {
 				}
 			});
 
-			Button callButton = (Button)findViewById(R.id.call_button);
-			callButton.setOnClickListener(new OnClickListener() {
 
-				public void onClick(View v) {
-					// TODO Auto-generated method stub
-					Intent intent = new Intent(Intent.ACTION_CALL);
-					intent.setData(Uri.parse("tel:" + phoneNum[0]));
-					startActivity(intent);
-				}
-			});
-
-			Button textButton = (Button)findViewById(R.id.message_button);
-			textButton.setOnClickListener(new OnClickListener() {
-
-				public void onClick(View v) {
-					// TODO Auto-generated method stub
-					SmsManager smsManger = SmsManager.getDefault();
-					smsManger.sendTextMessage(phoneNum[0], null, "Test message ignore", null, null);
-				}
-			});
-			
 			// Test Code: Delete later
 			if (contactID.contentEquals("414"))
 			{
