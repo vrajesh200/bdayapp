@@ -21,8 +21,8 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
 public class PreferenceUtil {
-	private static final String PREF_NAME = "bdayapp";
-	private static final int PREF_MODE = 0;
+	private static final String PREF_NAME = "prefFile";
+	private static final int PREF_MODE = Context.MODE_PRIVATE;
 
 	private static final String NOTIFICATION_TIME_HOUR		= "notificationHour";
 	private static final String NOTIFICATION_TIME_MIN		= "notificationMinute";
@@ -36,7 +36,7 @@ public class PreferenceUtil {
 
 	private static SharedPreferences getPrefs(Context ctx)
 	{
-		return ctx.getSharedPreferences(PREF_NAME, PREF_MODE);
+		return ctx.getApplicationContext().getSharedPreferences(PREF_NAME,PREF_MODE);
 	}
 
 	public static void storeNotifierTime(Context ctx, int hour, int minutes)
@@ -44,6 +44,7 @@ public class PreferenceUtil {
 		Editor edit = getPrefs(ctx).edit();
 		edit.putInt(NOTIFICATION_TIME_HOUR, hour);
 		edit.putInt(NOTIFICATION_TIME_MIN, minutes);
+		edit.commit();
 	}
 
 	public static NotificationTime getNotifierTime(Context ctx)
@@ -54,12 +55,16 @@ public class PreferenceUtil {
 
 	public static void enableSoundNotification(Context ctx)
 	{
-		getPrefs(ctx).edit().putBoolean(NOTIFICATION_SOUND, true);
+		Editor edit = getPrefs(ctx).edit();
+		edit.putBoolean(NOTIFICATION_SOUND, true);
+		edit.commit();
 	}
 
 	public static void disableSoundNotification(Context ctx)
 	{
-		getPrefs(ctx).edit().putBoolean(NOTIFICATION_SOUND, false);
+		Editor edit = getPrefs(ctx).edit();
+		edit.putBoolean(NOTIFICATION_SOUND, false);
+		edit.commit();
 	}
 
 	public static boolean soundNotificationEnabled(Context ctx)
@@ -69,12 +74,16 @@ public class PreferenceUtil {
 
 	public static void enableVibrateNotification(Context ctx)
 	{
-		getPrefs(ctx).edit().putBoolean(NOTIFICATION_VIBRATE, true);
+		Editor edit = getPrefs(ctx).edit();
+		edit.putBoolean(NOTIFICATION_VIBRATE, true);
+		edit.commit();
 	}
 
 	public static void disableVibrateNotification(Context ctx)
 	{
-		getPrefs(ctx).edit().putBoolean(NOTIFICATION_VIBRATE, false);
+		Editor edit = getPrefs(ctx).edit();
+		edit.putBoolean(NOTIFICATION_VIBRATE, false);
+		edit.commit();
 	}
 
 	public static boolean vibrateNotificationEnabled(Context ctx)
@@ -84,7 +93,9 @@ public class PreferenceUtil {
 
 	public static void setNotificationLedColor(Context ctx, int color)
 	{
-		getPrefs(ctx).edit().putInt(NOTIFICATION_LED_COLOR, color);
+		Editor edit = getPrefs(ctx).edit();
+		edit.putInt(NOTIFICATION_LED_COLOR, color);
+		edit.commit();
 	}
 
 	public static int getNotificationLedColor(Context ctx)
