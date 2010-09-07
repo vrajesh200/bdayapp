@@ -36,7 +36,7 @@ public class ContactInfo implements Comparable<ContactInfo>, Serializable {
 	private Date dateOfBirth;
 	private int numOfDaysToNextBday;
 	private Uri contactPhotoUri;
-	private String phoneNumber;
+	private String[] phoneNumber;
 
 	public void setContactId(String contactId) {
 		this.contactId = contactId;
@@ -60,7 +60,7 @@ public class ContactInfo implements Comparable<ContactInfo>, Serializable {
 		numOfDaysToNextBday = Utils.numberOfDaysToBday(dateOfBirth);
 	}
 
-	public void setContactPhoneNumber(String phoneNumber){
+	public void setContactPhoneNumber(String[] phoneNumber){
 		this.phoneNumber = phoneNumber;
 	}
 
@@ -80,7 +80,7 @@ public class ContactInfo implements Comparable<ContactInfo>, Serializable {
 		return contactPhotoUri;
 	}
 
-	public String getContactPhoneNumber() {
+	public String[] getContactPhoneNumber() {
 		return phoneNumber;
 	}
 	public int compareTo(ContactInfo another) {

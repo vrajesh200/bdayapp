@@ -94,17 +94,9 @@ public class ContactListUtil {
 		return photo;
 	}
 
-	public static String getContactPhoneNum(Context ctx, String contactId) {
+	public static String[] getContactPhoneNum(Context ctx, String contactId) {
 		String[] nums = getContactPhoneNums(ctx, contactId);
-
-		if (nums.length == 0)
-		{
-			return "";
-		}
-		else
-		{
-			return nums[0];
-		}
+		return nums;
 	}
 
 	public static String[] getContactPhoneNums(Context ctx, String contactId)
