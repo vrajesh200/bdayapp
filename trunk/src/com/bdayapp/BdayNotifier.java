@@ -99,13 +99,14 @@ public class BdayNotifier extends Activity {
 				public void onItemClick(AdapterView<?> parent, View view,
 				        int position, long id) {
 					Intent i = new Intent(BdayNotifier.this, ContactPage.class);
-					i.putExtra("IndexInList", position);
+					i.putExtra("ContactID", contactList.get(position).getContactId());
 					startActivity(i);
 				    }
 				});
 			if (contactList.get(0).getNumOfDaysToNextBday() == 0)
 			{
-				Utils.setNotification(BdayNotifier.this, 0, contactList.get(0).getContactName(), Notification.FLAG_AUTO_CANCEL);
+				Utils.setNotification(BdayNotifier.this, contactList.get(0).getContactId(),
+							contactList.get(0).getContactName(), Notification.FLAG_AUTO_CANCEL);
 			}
 			Log.w("LoadTask", "Setting Alarm");
 			Utils.setAlarm(BdayNotifier.this, -1, -1);

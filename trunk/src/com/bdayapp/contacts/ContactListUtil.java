@@ -33,9 +33,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
+import android.provider.ContactsContract.Data;
 import android.provider.ContactsContract.CommonDataKinds.Event;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
-import android.provider.ContactsContract.Data;
+import android.util.Log;
 
 import com.bdayapp.Utils;
 
@@ -141,7 +142,30 @@ public class ContactListUtil {
 		}
 		return numbers;
 	}
-
+	public static String getContactName(Context ctx, String contactID)
+	{
+		String contactName = "";
+		Cursor c = ctx.getContentResolver().query(Data.CONTENT_URI,
+				new String[] {ContactsContract.Contacts.DISPLAY_NAME},
+				Data.CONTACT_ID + "=" + contactID + " AND " + ContactsContract.Contacts.IN_VISIBLE_GROUP + " = '" + "1" + "'",
+				null, null);
+		if (c != null)
+		{
+			Log.w("getContactName", "Cursor is not null" );
+			c.moveToFirst();
+			if (c.getCount() != 0)
+			{
+				Log.w("getContactName", "Count = " + c.getCount());
+				Log.w("getContactName", "Clomun Count = " + c.getColumnCount());
+				Log.w("getContactName", "Index name = " + c.getColumnName(0));
+				Log.w("getContactName", "contactID = " + contactID);
+				contactName = c.getString(0);
+			}
+			c.close();
+		}
+		
+		return contactName;
+	}
 	public static String getNextBdayText(ContactInfo info)
 	{
 		Calendar cal = Calendar.getInstance();

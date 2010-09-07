@@ -176,10 +176,10 @@ public class Utils {
 		am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sender);
 	}
 	
-	public static void setNotification(Context ctx, int position, String contactName, int flags) {
+	public static void setNotification(Context ctx, String ContactID, String contactName, int flags) {
 		Intent configIntent = new Intent(ctx, ContactPage.class);
 		configIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		configIntent.putExtra("IndexInList", position);
+		configIntent.putExtra("ContactID", ContactID);
 		Notification note = new Notification(R.drawable.icon_notify, contactName, System.currentTimeMillis());
 		note.flags = flags;
 		note.flags |= Notification.FLAG_SHOW_LIGHTS;

@@ -23,6 +23,8 @@
 
 package com.bdayapp;
 
+import java.util.Date;
+
 import android.app.Activity;
 import android.app.Notification;
 import android.content.Intent;
@@ -40,30 +42,37 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bdayapp.contacts.ContactInfo;
+import com.bdayapp.contacts.ContactListUtil;
 
 public class ContactPage extends Activity {
-		public ContactInfo cinfo = null;
+
 		@Override
 		protected void onCreate(Bundle savedInstanceState) {
 			// TODO Auto-generated method stub
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.contact_page);
 			Bundle bundle = this.getIntent().getExtras();
-			int position = bundle.getInt("IndexInList");
-			cinfo = BdayNotifier.contactList.get(position);
+			String contactID = bundle.getString("ContactID");
+			
+			String contactName = ContactListUtil.getContactName(this, contactID);
+			Date dateOfBirth = ContactListUtil.getContactDob(this, contactID);
+			int numOfDaysLeft = Utils.numberOfDaysToBday(dateOfBirth) ;
+			Uri contactPhoto = ContactListUtil.getContactPhoto(this, contactID);
+			final String[] phoneNum = ContactListUtil.getContactPhoneNums(this, contactID);
+			
 			TextView tview_cname = (TextView)findViewById(R.id.contact_name_1);
-	        tview_cname.setText(cinfo.getContactName());
+	        tview_cname.setText(contactName);
+	        
 	        TextView tview_dob = (TextView)findViewById(R.id.date_of_birth_1);
-	        tview_dob.setText(Utils.format(cinfo.getDateOfBirth()));
-
+	        tview_dob.setText(Utils.format(dateOfBirth));
+	        
 	        TextView tview_next = (TextView)findViewById(R.id.next_bday_1);
-	        tview_next.setText(String.valueOf(cinfo.getNumOfDaysToNextBday()) + " days to Go");
+	        tview_next.setText(String.valueOf(numOfDaysLeft) + " days to Go");
 	        tview_next.setTextColor(ColorStateList.valueOf(0xFFFF0000));
 
 	        Bitmap bmap = null;
 	        try {
-				bmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), cinfo.getContactPhotoUri());
+				bmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), contactPhoto);
 			} catch (Exception e) {
 			}
 			ImageView iview_photo = (ImageView)findViewById(R.id.contact_image_1);
@@ -78,7 +87,7 @@ public class ContactPage extends Activity {
 			}
 
 			TextView tviewPhNum = (TextView)findViewById(R.id.contac_number);
-			tviewPhNum.setText(cinfo.getContactPhoneNumber());
+			tviewPhNum.setText(phoneNum[0]);
 
 			View v = View.inflate(this, R.layout.contact_page, null);
 			v.setOnKeyListener(new OnKeyListener() {
@@ -96,7 +105,7 @@ public class ContactPage extends Activity {
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 					Intent intent = new Intent(Intent.ACTION_CALL);
-					intent.setData(Uri.parse("tel:" + cinfo.getContactPhoneNumber()));
+					intent.setData(Uri.parse("tel:" + phoneNum[0]));
 					startActivity(intent);
 				}
 			});
@@ -107,12 +116,12 @@ public class ContactPage extends Activity {
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 					SmsManager smsManger = SmsManager.getDefault();
-					smsManger.sendTextMessage(cinfo.getContactPhoneNumber(), null, "Test message ignore", null, null);
+					smsManger.sendTextMessage(phoneNum[0], null, "Test message ignore", null, null);
 				}
 			});
-			if (position == 5)
+			if (contactID.contentEquals("414"))
 			{
-				Utils.setNotification(this, position, cinfo.getContactName(), Notification.FLAG_AUTO_CANCEL);
+				Utils.setNotification(this, contactID, contactName, Notification.FLAG_AUTO_CANCEL);
 			}
 		}
 }

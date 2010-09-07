@@ -44,7 +44,8 @@ public class AlarmService extends IntentService {
 		}
 		if (BdayNotifier.contactList.get(0).getNumOfDaysToNextBday() == 0)
 		{
-			Utils.setNotification(this, 0,BdayNotifier.contactList.get(0).getContactName(), Notification.FLAG_AUTO_CANCEL );
+			Utils.setNotification(this, BdayNotifier.contactList.get(0).getContactId(),
+					BdayNotifier.contactList.get(0).getContactName(), Notification.FLAG_AUTO_CANCEL );
 		}
 		Log.w("AlarmService", "Setting Alarm");
 		Utils.setAlarm(this, -1, -1);
