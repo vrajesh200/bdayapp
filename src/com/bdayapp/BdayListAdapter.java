@@ -41,7 +41,7 @@ public class BdayListAdapter extends BaseAdapter {
 	public BdayListAdapter(Context cxt, ArrayList<ContactInfo> list) {
 		elements = list;
 		ctx = cxt;
-		defaultDrawable = ctx.getResources().getDrawable(R.drawable.stock_contact_photo);
+		defaultDrawable = ctx.getResources().getDrawable(R.drawable.ic_contact_picture);
 	}
 
 	public int getCount() {
