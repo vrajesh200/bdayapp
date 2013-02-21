@@ -18,8 +18,6 @@ package com.bdayapp;
 
 import java.util.ArrayList;
 
-import com.bdayapp.contacts.PhoneNumInfo;
-
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -28,9 +26,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bdayapp.contacts.PhoneNumInfo;
 
 public class PhoneNumListAdapter extends BaseAdapter {
 
@@ -42,17 +41,14 @@ public class PhoneNumListAdapter extends BaseAdapter {
 	}
 	
 	public int getCount() {
-		// TODO Auto-generated method stub
 		return phoneList.size();
 	}
 
 	public Object getItem(int position) {
-		// TODO Auto-generated method stub
 		return phoneList.get(position);
 	}
 
 	public long getItemId(int position) {
-		// TODO Auto-generated method stub
 		return position;
 	}
 

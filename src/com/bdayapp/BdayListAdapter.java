@@ -19,7 +19,6 @@ package com.bdayapp;
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.provider.MediaStore;
@@ -70,12 +69,14 @@ public class BdayListAdapter extends BaseAdapter {
 
 		// ContactDOB
 		textView = (TextView) convertView.findViewById(R.id.date_of_birth);
-		textView.setText(Utils.format(contactInfo.getDateOfBirth()));
-
+		textView.setText(ContactListUtil.getNextBdayText(contactInfo) + " on " + Utils.format(contactInfo.getDateOfBirth()));
+		
 		// DaysToBday
+		/**
 		textView = (TextView) convertView.findViewById(R.id.next_bday);
-		textView.setText(ContactListUtil.getNextBdayText(contactInfo));
+		textView.setText();
 		textView.setTextColor(ColorStateList.valueOf(0xFFFF0000));
+		*/
 
 		// ContactPhoto
 		Bitmap bitmap = null;
