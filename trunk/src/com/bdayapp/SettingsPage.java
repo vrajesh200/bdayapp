@@ -16,13 +16,17 @@
 
 package com.bdayapp;
 
+import java.util.Calendar;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.ListActivity;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -59,6 +63,8 @@ public class SettingsPage extends ListActivity{
 		    	switch (position)
 		    	{
 		    	case 0:
+		    		//DialogFragment newFragment = new TimePickerFragment();
+		    	    //newFragment.show(getFragmentManager(), "timePicker");
 		    		showDialog(TIME_DIALOG_ID);
 		    		break;
 		    	case 1:
