@@ -79,7 +79,7 @@ public class ContactPage extends Activity {
 			}
 			else
 			{
-				iview_photo.setImageDrawable(this.getResources().getDrawable(R.drawable.stock_contact_photo));
+				iview_photo.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_contact_picture));
 			}
 
 			ListView phoneNumList = (ListView)findViewById(R.id.phonenum_list);

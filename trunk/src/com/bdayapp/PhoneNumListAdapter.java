@@ -29,6 +29,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class PhoneNumListAdapter extends BaseAdapter {
@@ -69,7 +70,7 @@ public class PhoneNumListAdapter extends BaseAdapter {
 		TextView phTypeTv = (TextView)convertView.findViewById(R.id.phonenum_type);
 		phTypeTv.setText(phoneList.get(position).getPhoneType());
 		
-		Button callButton = (Button)convertView.findViewById(R.id.call_button);
+		ImageView callButton = (ImageView)convertView.findViewById(R.id.call_button);
 		callButton.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
@@ -80,7 +81,7 @@ public class PhoneNumListAdapter extends BaseAdapter {
 			}
 		});
 
-		Button textButton = (Button)convertView.findViewById(R.id.message_button);
+		ImageView textButton = (ImageView)convertView.findViewById(R.id.message_button);
 		textButton.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
