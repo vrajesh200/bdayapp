@@ -63,7 +63,6 @@ public class ContactPage extends Activity {
 	        // Set DaysToGo
 	        TextView tview_next = (TextView)findViewById(R.id.next_bday_1);
 	        tview_next.setText(String.valueOf(numOfDaysLeft) + " days to Go");
-	        tview_next.setTextColor(ColorStateList.valueOf(0xFFFF0000));
 
 	        Bitmap bmap = null;
 	        try {
